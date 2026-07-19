@@ -1,914 +1,495 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfolio de Sebastián Lemoine, estudiante de Ingeniería en Ciberseguridad orientado a Blue Team y operaciones SOC.">
-  <meta name="theme-color" content="#05080d">
- 
-  <title>Sebastián Lemoine | Blue Team & SOC Analyst</title>
- 
-  <style>
-    :root {
-      --background: #05080d;
-      --background-alt: #08111b;
-      --panel: rgba(9, 20, 31, 0.86);
-      --panel-solid: #09141f;
-      --cyan: #00f5ff;
-      --cyan-soft: rgba(0, 245, 255, 0.15);
-      --pink: #ff2bd6;
-      --green: #9eff00;
-      --white: #edfaff;
-      --muted: #8fa8b5;
-      --border: rgba(0, 245, 255, 0.28);
-      --max-width: 1160px;
-    }
- 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
- 
-    html {
-      scroll-behavior: smooth;
-    }
- 
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--white);
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(255, 43, 214, 0.12), transparent 27rem),
-        radial-gradient(circle at 85% 15%, rgba(0, 245, 255, 0.13), transparent 30rem),
-        linear-gradient(180deg, #04070b 0%, #07101a 50%, #04070b 100%);
-    }
- 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: 0.16;
-      background-image:
-        linear-gradient(rgba(0, 245, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 245, 255, 0.08) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, #000 0%, transparent 95%);
-    }
- 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      pointer-events: none;
-      opacity: 0.045;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 3px,
-        var(--cyan) 4px
-      );
-    }
- 
-    a {
-      color: inherit;
-    }
- 
-    .container {
-      width: min(var(--max-width), 92%);
-      margin: 0 auto;
-    }
- 
-    .mono {
-      font-family: "Courier New", Courier, monospace;
-    }
- 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--border);
-      background: rgba(4, 7, 11, 0.82);
-      backdrop-filter: blur(14px);
-    }
- 
-    nav {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
- 
-    .brand {
-      text-decoration: none;
-      font-family: "Courier New", monospace;
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: 0.13em;
-      color: var(--cyan);
-      text-shadow: 0 0 14px rgba(0, 245, 255, 0.7);
-    }
- 
-    .brand span {
-      color: var(--pink);
-    }
- 
-    .navigation {
-      display: flex;
-      gap: 22px;
-      list-style: none;
-    }
- 
-    .navigation a {
-      color: var(--muted);
-      text-decoration: none;
-      font-family: "Courier New", monospace;
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: 0.2s ease;
-    }
- 
-    .navigation a:hover {
-      color: var(--cyan);
-      text-shadow: 0 0 10px var(--cyan);
-    }
- 
-    .hero {
-      min-height: calc(100vh - 72px);
-      display: grid;
-      align-items: center;
-      padding: 88px 0;
-    }
- 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      align-items: center;
-      gap: 58px;
-    }
- 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      color: var(--green);
-      font-family: "Courier New", monospace;
-      font-size: 0.76rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
- 
-    .status::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-      animation: pulse 1.8s infinite;
-    }
- 
-    @keyframes pulse {
-      50% {
-        opacity: 0.45;
-        transform: scale(0.75);
-      }
-    }
- 
-    h1 {
-      max-width: 760px;
-      font-family: "Courier New", monospace;
-      font-size: clamp(3rem, 7vw, 6.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.065em;
-      text-transform: uppercase;
-    }
- 
-    .glitch {
-      color: var(--white);
-      text-shadow:
-        3px 0 var(--pink),
-        -3px 0 var(--cyan);
-      animation: glitch 3s infinite steps(1);
-    }
- 
-    @keyframes glitch {
-      0%, 89%, 100% { transform: translate(0); }
-      90% { transform: translate(-2px, 1px); }
-      92% { transform: translate(3px, -1px); }
-      94% { transform: translate(-1px, 2px); }
-    }
- 
-    .role {
-      margin-top: 22px;
-      color: var(--cyan);
-      font-family: "Courier New", monospace;
-      font-size: clamp(1rem, 2.2vw, 1.35rem);
-      letter-spacing: 0.05em;
-    }
- 
-    .intro {
-      max-width: 720px;
-      margin: 25px 0 32px;
-      color: var(--muted);
-      font-size: 1.04rem;
-      line-height: 1.8;
-    }
- 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-    }
- 
-    .button {
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 21px;
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      background: transparent;
-      text-decoration: none;
-      font-family: "Courier New", monospace;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: 0.22s ease;
-    }
- 
-    .button:hover {
-      color: #001317;
-      background: var(--cyan);
-      box-shadow: 0 0 26px rgba(0, 245, 255, 0.48);
-      transform: translateY(-2px);
-    }
- 
-    .button.pink {
-      border-color: var(--pink);
-      color: var(--pink);
-    }
- 
-    .button.pink:hover {
-      color: #190015;
-      background: var(--pink);
-      box-shadow: 0 0 26px rgba(255, 43, 214, 0.46);
-    }
- 
-    .terminal {
-      position: relative;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      box-shadow:
-        0 0 40px rgba(0, 245, 255, 0.08),
-        inset 0 0 28px rgba(0, 245, 255, 0.025);
-      transform: perspective(1000px) rotateY(-4deg);
-    }
- 
-    .terminal::after {
-      content: "";
-      position: absolute;
-      inset: 9px -9px -9px 9px;
-      z-index: -1;
-      border: 1px solid rgba(255, 43, 214, 0.28);
-    }
- 
-    .terminal-head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 13px 16px;
-      border-bottom: 1px solid var(--border);
-    }
- 
-    .terminal-head span {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 8px var(--cyan);
-    }
- 
-    .terminal-head span:nth-child(2) {
-      background: var(--pink);
-      box-shadow: 0 0 8px var(--pink);
-    }
- 
-    .terminal-head span:nth-child(3) {
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-    }
- 
-    .terminal-body {
-      min-height: 356px;
-      padding: 26px;
-      color: var(--cyan);
-      font-family: "Courier New", monospace;
-      font-size: 0.88rem;
-      line-height: 1.95;
-    }
- 
-    .terminal-body .prompt {
-      color: var(--pink);
-    }
- 
-    .terminal-body .dim {
-      color: var(--muted);
-    }
- 
-    .terminal-body .ok {
-      color: var(--green);
-    }
- 
-    .cursor {
-      display: inline-block;
-      width: 9px;
-      height: 1em;
-      vertical-align: middle;
-      background: var(--green);
-      animation: blink 0.8s infinite;
-    }
- 
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
- 
-    section {
-      padding: 94px 0;
-      scroll-margin-top: 72px;
-    }
- 
-    .section-heading {
-      margin-bottom: 38px;
-    }
- 
-    .section-kicker {
-      color: var(--pink);
-      font-family: "Courier New", monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
- 
-    h2 {
-      margin-top: 9px;
-      color: var(--white);
-      font-family: "Courier New", monospace;
-      font-size: clamp(2rem, 4vw, 3.25rem);
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-    }
- 
-    h2::before {
-      content: "// ";
-      color: var(--cyan);
-    }
- 
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      gap: 24px;
-    }
- 
-    .panel {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      padding: 30px;
-    }
- 
-    .panel p {
-      color: var(--muted);
-      line-height: 1.8;
-    }
- 
-    .panel p + p {
-      margin-top: 16px;
-    }
- 
-    .objective {
-      border-left: 3px solid var(--pink);
-    }
- 
-    .objective strong {
-      color: var(--white);
-    }
- 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
- 
-    .card {
-      position: relative;
-      min-height: 230px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: rgba(8, 18, 28, 0.78);
-      padding: 27px;
-      transition: 0.22s ease;
-    }
- 
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 65px;
-      height: 2px;
-      background: var(--pink);
-      box-shadow: 0 0 12px var(--pink);
-    }
- 
-    .card:hover {
-      transform: translateY(-7px);
-      border-color: var(--pink);
-      box-shadow: 0 0 30px rgba(255, 43, 214, 0.11);
-    }
- 
-    .card-number {
-      color: var(--pink);
-      font-family: "Courier New", monospace;
-      font-size: 0.75rem;
-    }
- 
-    .card h3 {
-      margin: 18px 0 13px;
-      color: var(--white);
-      font-family: "Courier New", monospace;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-    }
- 
-    .card p {
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 0.94rem;
-    }
- 
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
- 
-    .skill-group {
-      border: 1px solid var(--border);
-      background: rgba(8, 18, 28, 0.72);
-      padding: 26px;
-    }
- 
-    .skill-group h3 {
-      margin-bottom: 18px;
-      color: var(--cyan);
-      font-family: "Courier New", monospace;
-      font-size: 1rem;
-      text-transform: uppercase;
-    }
- 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
- 
-    .tag {
-      padding: 8px 11px;
-      border: 1px solid rgba(0, 245, 255, 0.22);
-      color: var(--muted);
-      background: rgba(0, 245, 255, 0.04);
-      font-family: "Courier New", monospace;
-      font-size: 0.73rem;
-    }
- 
-    .cert-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
- 
-    .cert {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      padding: 24px;
-    }
- 
-    .cert-icon {
-      color: var(--green);
-      font-family: "Courier New", monospace;
-      font-weight: 800;
-    }
- 
-    .cert h3 {
-      margin-bottom: 7px;
-      font-size: 1rem;
-    }
- 
-    .cert p {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.5;
-    }
- 
-    .portfolio-box {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--pink);
-      padding: 42px;
-      background:
-        linear-gradient(135deg, rgba(255, 43, 214, 0.08), rgba(0, 245, 255, 0.08)),
-        var(--panel-solid);
-    }
- 
-    .portfolio-box::after {
-      content: "REPOSITORY";
-      position: absolute;
-      right: -20px;
-      bottom: -18px;
-      color: rgba(0, 245, 255, 0.05);
-      font-family: "Courier New", monospace;
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      font-weight: 900;
-    }
- 
-    .portfolio-box p {
-      position: relative;
-      z-index: 1;
-      max-width: 740px;
-      margin: 17px 0 28px;
-      color: var(--muted);
-      line-height: 1.75;
-    }
- 
-    .portfolio-box .actions {
-      position: relative;
-      z-index: 2;
-    }
- 
-    footer {
-      padding: 30px 0;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      text-align: center;
-      font-family: "Courier New", monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.07em;
-    }
- 
-    @media (max-width: 880px) {
-      .hero-grid,
-      .about-grid,
-      .cards,
-      .skills-grid,
-      .cert-grid {
-        grid-template-columns: 1fr;
-      }
- 
-      .terminal {
-        transform: none;
-      }
-    }
- 
-    @media (max-width: 680px) {
-      .navigation {
-        display: none;
-      }
- 
-      .hero {
-        padding: 62px 0 74px;
-      }
- 
-      section {
-        padding: 74px 0;
-      }
- 
-      .panel,
-      .card,
-      .skill-group,
-      .portfolio-box {
-        padding: 23px;
-      }
- 
-      .button {
-        width: 100%;
-      }
-    }
- 
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sebastian Lemoine | Cybersecurity Portfolio</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:#e5e7eb;
+    line-height:1.6;
+}
+
+/* HEADER */
+
+header{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px;
+    background:
+    linear-gradient(
+    rgba(11,17,32,.85),
+    rgba(11,17,32,.95)),
+    url("https://images.unsplash.com/photo-1563013544-824ae1b704d3");
+    background-size:cover;
+}
+
+
+header h1{
+    font-size:55px;
+    color:#38bdf8;
+}
+
+
+header h2{
+    margin-top:10px;
+    font-weight:400;
+    color:#cbd5e1;
+}
+
+
+header p{
+    max-width:700px;
+    margin-top:20px;
+}
+
+
+.btn{
+    display:inline-block;
+    margin-top:30px;
+    padding:12px 30px;
+    border-radius:8px;
+    background:#38bdf8;
+    color:#020617;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+
+/* SECTIONS */
+
+section{
+    padding:70px 10%;
+}
+
+
+.title{
+    text-align:center;
+    margin-bottom:40px;
+    font-size:35px;
+    color:#38bdf8;
+}
+
+
+/* ABOUT */
+
+.about{
+    max-width:900px;
+    margin:auto;
+    text-align:center;
+}
+
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+
+.card{
+    background:#111827;
+    padding:25px;
+    border-radius:15px;
+    border:1px solid #1e293b;
+    transition:.3s;
+}
+
+
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#38bdf8;
+}
+
+
+.card h3{
+    color:#38bdf8;
+    margin-bottom:15px;
+}
+
+
+/* CERTIFICATIONS */
+
+.cert{
+    background:#020617;
+    border-left:4px solid #38bdf8;
+}
+
+
+.cert span{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+
+/* SKILLS */
+
+.skills span{
+
+    display:inline-block;
+    background:#1e293b;
+    padding:10px 15px;
+    margin:8px;
+    border-radius:20px;
+}
+
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    padding:30px;
+    background:#020617;
+    color:#94a3b8;
+}
+
+
+</style>
+
 </head>
- 
+
+
 <body>
-  <header class="topbar">
-    <nav class="container" aria-label="Navegación principal">
-      <a class="brand" href="#inicio">CYBERLIFE<span>SA</span></a>
- 
-      <ul class="navigation">
-        <li><a href="#sobre-mi">Sobre mí</a></li>
-        <li><a href="#competencias">Competencias</a></li>
-        <li><a href="#certificaciones">Certificaciones</a></li>
-        <li><a href="#portafolio">Portafolio</a></li>
-      </ul>
-    </nav>
-  </header>
- 
-  <main>
-    <section class="hero" id="inicio">
-      <div class="container hero-grid">
-        <div>
-          <div class="status">Disponible para oportunidades SOC L1</div>
- 
-          <h1 class="glitch">Sebastián<br>Lemoine</h1>
- 
-          <p class="role">
-            Estudiante de Ingeniería en Ciberseguridad<br>
-            Blue Team · Threat Hunting · SOC Operations
-          </p>
- 
-          <p class="intro">
-            Perfil orientado a la ciberseguridad defensiva, con experiencia
-            práctica en análisis de logs, investigación de incidentes,
-            identificación de IoCs y detección de amenazas mediante
-            laboratorios técnicos y entornos virtualizados.
-          </p>
- 
-          <div class="actions">
-            <a class="button" href="https://github.com/cyberlifeSA/Portfolio" target="_blank" rel="noopener noreferrer">
-              Ver portafolio
-            </a>
- 
-            <a class="button pink" href="https://www.linkedin.com/in/sebastian-lemoine/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-        </div>
- 
-        <aside class="terminal" aria-label="Resumen profesional">
-          <div class="terminal-head">
-            <span></span><span></span><span></span>
-          </div>
- 
-          <div class="terminal-body">
-            <div><span class="prompt">sebastian@blue-team</span>:~$ whoami</div>
-            <div class="dim">Sebastián Lemoine</div>
-            <br>
-            <div><span class="prompt">$</span> current_role</div>
-            <div class="ok">Estudiante de Ingeniería en Ciberseguridad</div>
-            <br>
-            <div><span class="prompt">$</span> target_role</div>
-            <div class="ok">SOC Analyst Nivel 1</div>
-            <br>
-            <div><span class="prompt">$</span> focus</div>
-            <div class="dim">Blue Team / DFIR / Threat Hunting</div>
-            <br>
-            <div><span class="prompt">$</span> learning_mode</div>
-            <div class="ok">CONTINUOUS <span class="cursor"></span></div>
-          </div>
-        </aside>
-      </div>
-    </section>
- 
-    <section id="sobre-mi">
-      <div class="container">
-        <div class="section-heading">
-          <span class="section-kicker">Perfil profesional</span>
-          <h2>Sobre mí</h2>
-        </div>
- 
-        <div class="about-grid">
-          <article class="panel">
-            <p>
-              Soy estudiante de Ingeniería en Ciberseguridad con un enfoque
-              orientado a las operaciones de ciberseguridad defensiva
-              <strong>(Blue Team)</strong>. He desarrollado experiencia práctica
-              en monitoreo de eventos de seguridad, análisis de registros,
-              investigación de incidentes y detección de amenazas.
-            </p>
- 
-            <p>
-              Complemento mi formación académica mediante laboratorios en
-              Blue Team Labs Online, TryHackMe, Hack The Box y entornos propios.
-              En ellos practico análisis de logs, análisis forense básico,
-              identificación de Indicadores de Compromiso, Threat Hunting y
-              detección basada en MITRE ATT&amp;CK.
-            </p>
-          </article>
- 
-          <aside class="panel objective">
-            <p class="mono" style="color: var(--pink); margin-bottom: 13px;">
-              OBJETIVO_PROFESIONAL
-            </p>
-            <p>
-              Incorporarme a un equipo de Seguridad Operacional como
-              <strong>SOC Analyst Nivel 1</strong>, contribuyendo a la detección
-              temprana de amenazas, investigación de alertas y mejora continua
-              de la postura de seguridad.
-            </p>
-          </aside>
-        </div>
-      </div>
-    </section>
- 
-    <section id="experiencia">
-      <div class="container">
-        <div class="section-heading">
-          <span class="section-kicker">Práctica técnica</span>
-          <h2>Áreas de trabajo</h2>
-        </div>
- 
-        <div class="cards">
-          <article class="card">
-            <span class="card-number">01 / DETECTION</span>
-            <h3>Monitoreo y triage</h3>
-            <p>
-              Revisión de eventos, correlación de información, análisis de
-              alertas y documentación inicial de incidentes de seguridad.
-            </p>
-          </article>
- 
-          <article class="card">
-            <span class="card-number">02 / INVESTIGATION</span>
-            <h3>Incident Response</h3>
-            <p>
-              Investigación de actividad sospechosa en entornos Windows y Linux,
-              identificación de evidencias y análisis de Indicadores de Compromiso.
-            </p>
-          </article>
- 
-          <article class="card">
-            <span class="card-number">03 / HUNTING</span>
-            <h3>Threat Hunting</h3>
-            <p>
-              Búsqueda proactiva de comportamientos maliciosos y mapeo de
-              técnicas adversarias mediante MITRE ATT&amp;CK y Cyber Kill Chain.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
- 
-    <section id="competencias">
-      <div class="container">
-        <div class="section-heading">
-          <span class="section-kicker">Stack defensivo</span>
-          <h2>Competencias técnicas</h2>
-        </div>
- 
-        <div class="skills-grid">
-          <article class="skill-group">
-            <h3>SOC &amp; Blue Team</h3>
-            <div class="tags">
-              <span class="tag">Event Monitoring</span>
-              <span class="tag">Alert Triage</span>
-              <span class="tag">Log Analysis</span>
-              <span class="tag">Incident Investigation</span>
-              <span class="tag">Threat Hunting</span>
-              <span class="tag">IoC Analysis</span>
-              <span class="tag">Event Correlation</span>
-            </div>
-          </article>
- 
-          <article class="skill-group">
-            <h3>SIEM &amp; Detection</h3>
-            <div class="tags">
-              <span class="tag">Splunk Enterprise</span>
-              <span class="tag">Splunk ES</span>
-              <span class="tag">SPL</span>
-              <span class="tag">Elastic</span>
-              <span class="tag">Dashboards</span>
-              <span class="tag">MITRE ATT&amp;CK</span>
-              <span class="tag">Cyber Kill Chain</span>
-            </div>
-          </article>
- 
-          <article class="skill-group">
-            <h3>Sistemas &amp; Redes</h3>
-            <div class="tags">
-              <span class="tag">Windows</span>
-              <span class="tag">Linux</span>
-              <span class="tag">Kali Linux</span>
-              <span class="tag">TCP/IP</span>
-              <span class="tag">DNS</span>
-              <span class="tag">HTTP/HTTPS</span>
-              <span class="tag">Sysmon</span>
-              <span class="tag">Firewalls</span>
-            </div>
-          </article>
- 
-          <article class="skill-group">
-            <h3>Herramientas</h3>
-            <div class="tags">
-              <span class="tag">Wireshark</span>
-              <span class="tag">Nmap</span>
-              <span class="tag">PowerShell</span>
-              <span class="tag">VirusTotal</span>
-              <span class="tag">CyberChef</span>
-              <span class="tag">Sysinternals</span>
-              <span class="tag">Volatility</span>
-              <span class="tag">Event Viewer</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
- 
-    <section id="certificaciones">
-      <div class="container">
-        <div class="section-heading">
-          <span class="section-kicker">Formación continua</span>
-          <h2>Certificaciones y cursos</h2>
-        </div>
- 
-        <div class="cert-grid">
-          <article class="cert">
-            <div class="cert-icon">[✓]</div>
-            <div>
-              <h3>CompTIA Security+</h3>
-              <p>Fundamentos de seguridad, gestión de riesgos, arquitectura y operaciones.</p>
-            </div>
-          </article>
- 
-          <article class="cert">
-            <div class="cert-icon">[✓]</div>
-            <div>
-              <h3>CCST Cybersecurity</h3>
-              <p>Cisco Certified Support Technician orientado a fundamentos de ciberseguridad.</p>
-            </div>
-          </article>
- 
-          <article class="cert">
-            <div class="cert-icon">[+]</div>
-            <div>
-              <h3>Splunk Training</h3>
-              <p>Cybersecurity Defense Analyst, Core Power User y Core User.</p>
-            </div>
-          </article>
- 
-          <article class="cert">
-            <div class="cert-icon">[~]</div>
-            <div>
-              <h3>En preparación</h3>
-              <p>HTB CDSA y HTB Certified Junior Cybersecurity Associate.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
- 
-    <section id="portafolio">
-      <div class="container">
-        <div class="portfolio-box">
-          <span class="section-kicker">GitHub / cyberlifeSA</span>
-          <h2>Portafolio técnico</h2>
- 
-          <p>
-            Repositorio con documentación de laboratorios, investigaciones,
-            write-ups, procedimientos de análisis, consultas SPL, análisis
-            forense básico, IoCs y ejercicios relacionados con operaciones SOC.
-          </p>
- 
-          <div class="actions">
-            <a class="button" href="https://github.com/cyberlifeSA/Portfolio" target="_blank" rel="noopener noreferrer">
-              Abrir repositorio
-            </a>
- 
-            <a class="button pink" href="https://github.com/cyberlifeSA" target="_blank" rel="noopener noreferrer">
-              Perfil GitHub
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
- 
-  <footer>
-    <div class="container">
-      © <span id="year"></span> Sebastián Lemoine // Blue Team Portfolio
-    </div>
-  </footer>
- 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+
+
+<header>
+
+<h1>Sebastian Lemoine</h1>
+
+<h2>Cybersecurity Analyst | SOC Analyst L1</h2>
+
+<p>
+Cybersecurity professional focused on Security Operations,
+SIEM monitoring, threat detection, incident response and
+digital forensics.
+</p>
+
+
+<a class="btn" href="#certificaciones">
+Ver Certificaciones
+</a>
+
+
+</header>
+
+
+
+<section>
+
+<h2 class="title">Sobre mí</h2>
+
+<div class="about">
+
+<p>
+
+Soy estudiante/profesional de Ciberseguridad enfocado en
+operaciones SOC, análisis de logs, detección de amenazas y
+respuesta a incidentes.
+
+Actualmente desarrollo habilidades en herramientas como
+Splunk, Microsoft Sentinel, Wireshark, MITRE ATT&CK y
+técnicas de análisis forense.
+
+</p>
+
+
+<!-- CAMBIAR ESTE TEXTO POR TU EXPERIENCIA -->
+
+</div>
+
+</section>
+
+
+
+
+<section id="certificaciones">
+
+<h2 class="title">Certificaciones</h2>
+
+
+<div class="cards">
+
+
+<div class="card cert">
+
+<h3>CompTIA Security+</h3>
+
+<p>
+Fundamentos de ciberseguridad, gestión de riesgos,
+amenazas, redes, criptografía y controles de seguridad.
+</p>
+
+<span>
+Certificación obtenida
+</span>
+
+</div>
+
+
+
+<div class="card cert">
+
+<h3>Cisco CCST Cybersecurity</h3>
+
+<p>
+Fundamentos de seguridad informática,
+conceptos SOC, amenazas, redes y protección de sistemas.
+</p>
+
+<span>
+Certificación obtenida
+</span>
+
+</div>
+
+
+
+<div class="card cert">
+
+<h3>Hack The Box CJCA</h3>
+
+<p>
+Junior Cybersecurity Analyst Certification.
+Análisis ofensivo básico, reconocimiento,
+vulnerabilidades y fundamentos defensivos.
+</p>
+
+<span>
+Certificación obtenida
+</span>
+
+</div>
+
+
+
+
+<div class="card cert">
+
+<h3>Splunk Cybersecurity Defense Analyst (CDSA)</h3>
+
+<p>
+Análisis SOC utilizando Splunk,
+detección de amenazas,
+investigación de incidentes y SIEM.
+</p>
+
+<span>
+Certificación obtenida
+</span>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+
+
+<section>
+
+
+<h2 class="title">
+Experiencia
+</h2>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>Experiencia Profesional</h3>
+
+<p>
+
+<!-- AQUI COLOCAS EXPERIENCIA LABORAL -->
+
+Empresa:
+<br>
+Cargo:
+<br>
+Funciones:
+<br>
+Herramientas utilizadas:
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>Prácticas / Laboratorios</h3>
+
+<p>
+
+<!-- COLOCA TUS LABS -->
+
+- Splunk SIEM Investigations
+<br>
+- Threat Hunting
+<br>
+- Malware Analysis
+<br>
+- Digital Forensics
+
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+
+
+
+<section>
+
+
+<h2 class="title">
+Skills Técnicas
+</h2>
+
+
+<div class="skills" style="text-align:center;">
+
+
+<span>Splunk</span>
+<span>Splunk ES</span>
+<span>Microsoft Sentinel</span>
+<span>KQL</span>
+<span>SIEM</span>
+<span>MITRE ATT&CK</span>
+<span>Incident Response</span>
+<span>Windows Security</span>
+<span>Linux</span>
+<span>Wireshark</span>
+<span>Volatility</span>
+<span>Threat Hunting</span>
+<span>IOC Analysis</span>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section>
+
+
+<h2 class="title">
+Proyectos
+</h2>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>Security Labs</h3>
+
+<p>
+
+Writeups de laboratorios,
+CTFs y análisis de incidentes.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>SOC Investigations</h3>
+
+<p>
+
+Investigaciones utilizando SIEM,
+logs, detección de amenazas
+y análisis de comportamiento.
+
+</p>
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section>
+
+
+<h2 class="title">
+Contacto
+</h2>
+
+
+<div class="about">
+
+
+<p>
+
+LinkedIn:
+<br>
+GitHub:
+<br>
+Email:
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+<footer>
+
+© 2026 Sebastian Lemoine | Cybersecurity Portfolio
+
+</footer>
+
+
+
 </body>
 </html>
