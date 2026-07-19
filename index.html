@@ -1,167 +1,294 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Sebastian Lemoine | Cybersecurity Portfolio</title>
 
+
 <style>
 
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial,sans-serif;
 }
+
 
 body{
-    background:#0b1120;
-    color:#e5e7eb;
-    line-height:1.6;
+
+background:#0b1120;
+color:#e5e7eb;
+line-height:1.6;
+
 }
 
-/* HEADER */
+
+/* HERO */
 
 header{
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:40px;
-    background:
-    linear-gradient(
-    rgba(11,17,32,.85),
-    rgba(11,17,32,.95)),
-    url("https://images.unsplash.com/photo-1563013544-824ae1b704d3");
-    background-size:cover;
+
+height:100vh;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+text-align:center;
+
+padding:40px;
+
+
+background:
+
+linear-gradient(
+rgba(2,6,23,0.88),
+rgba(2,6,23,0.96)
+),
+
+url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31");
+
+
+background-size:cover;
+
+background-position:center;
+
 }
+
 
 
 header h1{
-    font-size:55px;
-    color:#38bdf8;
+
+font-size:60px;
+
+color:#38bdf8;
+
 }
+
 
 
 header h2{
-    margin-top:10px;
-    font-weight:400;
-    color:#cbd5e1;
+
+margin-top:15px;
+
+font-weight:400;
+
+color:#cbd5e1;
+
 }
+
 
 
 header p{
-    max-width:700px;
-    margin-top:20px;
+
+max-width:750px;
+
+margin-top:20px;
+
 }
+
 
 
 .btn{
-    display:inline-block;
-    margin-top:30px;
-    padding:12px 30px;
-    border-radius:8px;
-    background:#38bdf8;
-    color:#020617;
-    text-decoration:none;
-    font-weight:bold;
+
+margin-top:30px;
+
+padding:14px 35px;
+
+background:#38bdf8;
+
+color:#020617;
+
+text-decoration:none;
+
+border-radius:8px;
+
+font-weight:bold;
+
 }
 
 
-/* SECTIONS */
+
+/* GENERAL */
+
 
 section{
-    padding:70px 10%;
+
+padding:80px 10%;
+
 }
 
 
 .title{
-    text-align:center;
-    margin-bottom:40px;
-    font-size:35px;
-    color:#38bdf8;
+
+text-align:center;
+
+font-size:36px;
+
+color:#38bdf8;
+
+margin-bottom:45px;
+
 }
+
+
 
 
 /* ABOUT */
 
+
 .about{
-    max-width:900px;
-    margin:auto;
-    text-align:center;
+
+max-width:900px;
+
+margin:auto;
+
+text-align:center;
+
 }
+
+
 
 
 /* CARDS */
 
+
 .cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+gap:25px;
+
 }
 
 
+
 .card{
-    background:#111827;
-    padding:25px;
-    border-radius:15px;
-    border:1px solid #1e293b;
-    transition:.3s;
+
+background:#111827;
+
+border:1px solid #1e293b;
+
+padding:30px;
+
+border-radius:15px;
+
+transition:.3s;
+
 }
 
 
 .card:hover{
-    transform:translateY(-8px);
-    border-color:#38bdf8;
+
+transform:translateY(-8px);
+
+border-color:#38bdf8;
+
 }
+
 
 
 .card h3{
-    color:#38bdf8;
-    margin-bottom:15px;
+
+color:#38bdf8;
+
+margin-bottom:15px;
+
 }
 
 
-/* CERTIFICATIONS */
 
-.cert{
-    background:#020617;
-    border-left:4px solid #38bdf8;
+
+/* CERTIFICACIONES */
+
+
+.cert a{
+
+text-decoration:none;
+
+color:white;
+
 }
 
 
-.cert span{
-    color:#94a3b8;
-    font-size:14px;
+.cert p{
+
+font-size:15px;
+
+color:#cbd5e1;
+
 }
+
+
+
+.more{
+
+margin-top:20px;
+
+display:inline-block;
+
+color:#38bdf8;
+
+font-weight:bold;
+
+}
+
+
 
 
 /* SKILLS */
 
+
+.skills{
+
+text-align:center;
+
+}
+
+
 .skills span{
 
-    display:inline-block;
-    background:#1e293b;
-    padding:10px 15px;
-    margin:8px;
-    border-radius:20px;
+
+display:inline-block;
+
+background:#1e293b;
+
+padding:10px 18px;
+
+border-radius:20px;
+
+margin:8px;
+
+
 }
 
 
-/* FOOTER */
+
 
 footer{
-    text-align:center;
-    padding:30px;
-    background:#020617;
-    color:#94a3b8;
+
+background:#020617;
+
+text-align:center;
+
+padding:30px;
+
+color:#94a3b8;
+
 }
+
 
 
 </style>
+
 
 </head>
 
@@ -169,21 +296,36 @@ footer{
 <body>
 
 
+
+
 <header>
 
-<h1>Sebastian Lemoine</h1>
 
-<h2>Cybersecurity Analyst | SOC Analyst L1</h2>
+<h1>
+Sebastian Lemoine
+</h1>
+
+
+<h2>
+SOC Analyst L1 | Cybersecurity | Threat Detection
+</h2>
+
+
 
 <p>
-Cybersecurity professional focused on Security Operations,
-SIEM monitoring, threat detection, incident response and
+
+Cybersecurity enthusiast focused on Security Operations,
+SIEM monitoring, incident response, threat hunting and
 digital forensics.
+
 </p>
 
 
-<a class="btn" href="#certificaciones">
+
+<a href="#certificaciones" class="btn">
+
 Ver Certificaciones
+
 </a>
 
 
@@ -191,115 +333,227 @@ Ver Certificaciones
 
 
 
+
+
+
 <section>
 
-<h2 class="title">Sobre mí</h2>
+
+<h2 class="title">
+
+Sobre mí
+
+</h2>
+
 
 <div class="about">
 
+
 <p>
 
-Soy estudiante/profesional de Ciberseguridad enfocado en
-operaciones SOC, análisis de logs, detección de amenazas y
-respuesta a incidentes.
+Soy profesional en formación de Ciberseguridad enfocado
+en operaciones SOC.
 
-Actualmente desarrollo habilidades en herramientas como
-Splunk, Microsoft Sentinel, Wireshark, MITRE ATT&CK y
-técnicas de análisis forense.
+Mi objetivo es desarrollarme como Security Analyst
+participando en monitoreo, investigación de alertas,
+análisis de logs y respuesta ante incidentes.
+
+Actualmente trabajo con tecnologías como Splunk,
+Microsoft Sentinel, MITRE ATT&CK, Wireshark y herramientas
+de análisis forense.
 
 </p>
 
 
-<!-- CAMBIAR ESTE TEXTO POR TU EXPERIENCIA -->
-
 </div>
 
+
 </section>
+
+
+
 
 
 
 
 <section id="certificaciones">
 
-<h2 class="title">Certificaciones</h2>
+
+<h2 class="title">
+
+Certificaciones
+
+</h2>
+
 
 
 <div class="cards">
 
 
-<div class="card cert">
-
-<h3>CompTIA Security+</h3>
-
-<p>
-Fundamentos de ciberseguridad, gestión de riesgos,
-amenazas, redes, criptografía y controles de seguridad.
-</p>
-
-<span>
-Certificación obtenida
-</span>
-
-</div>
 
 
 
 <div class="card cert">
 
-<h3>Cisco CCST Cybersecurity</h3>
+
+<a href="certificaciones/security-plus.html">
+
+
+<h3>
+CompTIA Security+
+</h3>
+
 
 <p>
-Fundamentos de seguridad informática,
-conceptos SOC, amenazas, redes y protección de sistemas.
+
+Fundamentos de ciberseguridad,
+redes, riesgos, controles,
+criptografía y amenazas.
+
 </p>
 
-<span>
-Certificación obtenida
+
+<span class="more">
+
+Ver análisis completo →
+
 </span>
 
-</div>
 
+</a>
 
-
-<div class="card cert">
-
-<h3>Hack The Box CJCA</h3>
-
-<p>
-Junior Cybersecurity Analyst Certification.
-Análisis ofensivo básico, reconocimiento,
-vulnerabilidades y fundamentos defensivos.
-</p>
-
-<span>
-Certificación obtenida
-</span>
 
 </div>
 
 
 
 
+
+
+
 <div class="card cert">
 
-<h3>Splunk Cybersecurity Defense Analyst (CDSA)</h3>
+
+<a href="certificaciones/ccst.html">
+
+
+<h3>
+
+Cisco CCST Cybersecurity
+
+</h3>
+
 
 <p>
-Análisis SOC utilizando Splunk,
+
+Fundamentos de seguridad,
+amenazas, conceptos SOC,
+protección de sistemas.
+
+</p>
+
+
+<span class="more">
+
+Ver análisis completo →
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card cert">
+
+
+<a href="certificaciones/cjca.html">
+
+
+<h3>
+
+HTB CJCA
+
+</h3>
+
+
+<p>
+
+Junior Cybersecurity Analyst.
+Fundamentos ofensivos,
+vulnerabilidades y análisis.
+
+</p>
+
+
+<span class="more">
+
+Ver análisis completo →
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card cert">
+
+
+<a href="certificaciones/cdsa.html">
+
+
+<h3>
+
+Splunk Cybersecurity Defense Analyst
+
+</h3>
+
+
+<p>
+
+Investigación SOC utilizando SIEM,
 detección de amenazas,
-investigación de incidentes y SIEM.
+análisis de incidentes.
+
 </p>
 
-<span>
-Certificación obtenida
+
+<span class="more">
+
+Ver análisis completo →
+
 </span>
 
-</div>
+
+</a>
 
 
 </div>
+
+
+
+
+</div>
+
 
 </section>
+
+
 
 
 
@@ -309,7 +563,9 @@ Certificación obtenida
 
 
 <h2 class="title">
+
 Experiencia
+
 </h2>
 
 
@@ -318,50 +574,79 @@ Experiencia
 
 <div class="card">
 
-<h3>Experiencia Profesional</h3>
+
+<h3>
+
+Experiencia Profesional
+
+</h3>
+
 
 <p>
 
-<!-- AQUI COLOCAS EXPERIENCIA LABORAL -->
+Aquí agregarás:
 
-Empresa:
+<br><br>
+
+- Empresa
+
 <br>
-Cargo:
+- Cargo
+
 <br>
-Funciones:
+- Responsabilidades
+
 <br>
-Herramientas utilizadas:
+- Herramientas utilizadas
 
 </p>
+
 
 </div>
 
 
 
+
 <div class="card">
 
-<h3>Prácticas / Laboratorios</h3>
+
+<h3>
+
+Laboratorios Cybersecurity
+
+</h3>
+
 
 <p>
 
-<!-- COLOCA TUS LABS -->
+Writeups de:
 
-- Splunk SIEM Investigations
+<br><br>
+
+- Hack The Box
+
+<br>
+- Blue Team Labs Online
+
+<br>
+- Splunk Investigations
+
 <br>
 - Threat Hunting
-<br>
-- Malware Analysis
-<br>
-- Digital Forensics
 
 </p>
 
+
 </div>
 
 
+
 </div>
+
 
 </section>
+
+
 
 
 
@@ -372,26 +657,39 @@ Herramientas utilizadas:
 
 
 <h2 class="title">
+
 Skills Técnicas
+
 </h2>
 
 
-<div class="skills" style="text-align:center;">
+
+<div class="skills">
 
 
 <span>Splunk</span>
+
 <span>Splunk ES</span>
+
 <span>Microsoft Sentinel</span>
+
 <span>KQL</span>
+
 <span>SIEM</span>
+
 <span>MITRE ATT&CK</span>
-<span>Incident Response</span>
-<span>Windows Security</span>
-<span>Linux</span>
-<span>Wireshark</span>
-<span>Volatility</span>
+
 <span>Threat Hunting</span>
-<span>IOC Analysis</span>
+
+<span>Incident Response</span>
+
+<span>Windows Logs</span>
+
+<span>Linux</span>
+
+<span>Wireshark</span>
+
+<span>Volatility</span>
 
 
 </div>
@@ -403,93 +701,19 @@ Skills Técnicas
 
 
 
-<section>
-
-
-<h2 class="title">
-Proyectos
-</h2>
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>Security Labs</h3>
-
-<p>
-
-Writeups de laboratorios,
-CTFs y análisis de incidentes.
-
-</p>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>SOC Investigations</h3>
-
-<p>
-
-Investigaciones utilizando SIEM,
-logs, detección de amenazas
-y análisis de comportamiento.
-
-</p>
-
-</div>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<section>
-
-
-<h2 class="title">
-Contacto
-</h2>
-
-
-<div class="about">
-
-
-<p>
-
-LinkedIn:
-<br>
-GitHub:
-<br>
-Email:
-
-</p>
-
-
-</div>
-
-
-</section>
 
 
 
 <footer>
 
-© 2026 Sebastian Lemoine | Cybersecurity Portfolio
+Sebastian Lemoine | Cybersecurity Portfolio
 
 </footer>
 
 
 
+
 </body>
+
+
 </html>
