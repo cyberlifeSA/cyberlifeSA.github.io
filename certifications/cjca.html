@@ -4,25 +4,133 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-<title>HTB CJCA | Sebastian Lemoine</title>
-
+<title>Hack The Box CJCA | Sebastian Lemoine</title>
 
 <style>
 
-/ MISMO CSS QUE CCST /
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:#e5e7eb;
+    line-height:1.7;
+}
+
+header{
+
+    padding:60px 10%;
+    text-align:center;
+
+    background:
+    linear-gradient(
+    rgba(2,6,23,.90),
+    rgba(2,6,23,.98)
+    ),
+    url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31");
+
+    background-size:cover;
+    background-position:center;
+
+}
+
+header h1{
+
+    font-size:45px;
+    color:#38bdf8;
+
+}
+
+header p{
+
+    margin-top:15px;
+    color:#cbd5e1;
+
+}
+
+.back{
+
+    display:inline-block;
+    margin-bottom:30px;
+    color:#38bdf8;
+    text-decoration:none;
+
+}
+
+.container{
+
+    max-width:1200px;
+    margin:auto;
+    padding:60px 10%;
+
+}
+
+.card{
+
+    background:#111827;
+    border:1px solid #1e293b;
+    border-radius:15px;
+    padding:35px;
+    margin-bottom:30px;
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    border-color:#38bdf8;
+
+}
+
+.card h2{
+
+    color:#38bdf8;
+    margin-bottom:20px;
+
+}
+
+.card ul{
+
+    padding-left:25px;
+
+}
+
+.card li{
+
+    margin-bottom:10px;
+
+}
+
+.tag{
+
+    display:inline-block;
+    background:#1e293b;
+    padding:8px 15px;
+    border-radius:20px;
+    margin:5px;
+
+}
+
+footer{
+
+    text-align:center;
+    padding:30px;
+    background:#020617;
+    color:#94a3b8;
+
+}
 
 </style>
 
-
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -30,114 +138,75 @@
 ← Volver al Portfolio
 </a>
 
-
 <h1>
-Hack The Box CJCA
+Hack The Box Certified Junior Cybersecurity Analyst (CJCA)
 </h1>
 
-
 <p>
-Junior Cybersecurity Analyst Certification
+Blue Team | Security Analysis | Junior Cybersecurity Analyst
 </p>
-
 
 </header>
 
-
-
 <div class="container">
-
 
 <div class="card">
 
-<h2>
-📌 Descripción
-</h2>
-
+<h2>📌 Descripción</h2>
 
 <p>
 
-Hack The Box Certified Junior Cybersecurity Analyst (CJCA)
-es una certificación práctica orientada al desarrollo de
-habilidades fundamentales para un analista de ciberseguridad.
+Hack The Box Certified Junior Cybersecurity Analyst (CJCA) es una certificación práctica diseñada para validar conocimientos fundamentales en ciberseguridad mediante laboratorios y escenarios reales.
 
-Evalúa conocimientos mediante escenarios reales relacionados
-con análisis, reconocimiento, vulnerabilidades y seguridad
-ofensiva básica.
+Su enfoque combina conceptos de Blue Team y fundamentos ofensivos, permitiendo comprender cómo identificar vulnerabilidades, analizar sistemas y entender las técnicas empleadas por los atacantes para fortalecer la capacidad de detección y respuesta.
 
 </p>
 
-
 </div>
-
-
 
 <div class="card">
 
-
-<h2>
-🎯 Conocimientos adquiridos
-</h2>
-
+<h2>🎯 Conocimientos adquiridos</h2>
 
 <ul>
 
-<li>Reconocimiento y enumeración</li>
+<li>Reconocimiento y enumeración de sistemas.</li>
 
-<li>Análisis de vulnerabilidades</li>
+<li>Análisis de vulnerabilidades.</li>
 
-<li>Fundamentos de explotación</li>
+<li>Fundamentos de seguridad en Linux y Windows.</li>
 
-<li>Seguridad web básica</li>
+<li>Servicios y protocolos de red.</li>
 
-<li>Linux y Windows fundamentals</li>
+<li>Conceptos básicos de Active Directory.</li>
 
-<li>Análisis de servicios de red</li>
+<li>Seguridad Web.</li>
 
+<li>Análisis de evidencias e indicadores de compromiso (IOC).</li>
+
+<li>Metodologías de investigación.</li>
 
 </ul>
 
-
 </div>
-
-
-
-
 
 <div class="card">
 
-
-<h2>
-🛡 Aplicación en SOC
-</h2>
-
+<h2>🛡 Aplicación en un entorno SOC</h2>
 
 <p>
 
-Aunque está orientada desde una perspectiva técnica,
-permite comprender cómo los atacantes realizan
-reconocimiento y explotación.
+Los conocimientos obtenidos permiten comprender cómo se desarrollan distintas fases de un ataque, facilitando la investigación de alertas y el análisis de eventos desde la perspectiva de un analista SOC.
 
-Este conocimiento ayuda a un analista SOC a identificar
-indicadores de compromiso y comprender técnicas utilizadas
-por actores maliciosos.
+Comprender las técnicas utilizadas por un atacante ayuda a identificar comportamientos anómalos, reconocer indicadores de compromiso y realizar investigaciones más efectivas durante el proceso de respuesta a incidentes.
 
 </p>
 
-
 </div>
-
-
-
-
 
 <div class="card">
 
-
-<h2>
-🔧 Herramientas utilizadas
-</h2>
-
+<h2>🔧 Herramientas utilizadas</h2>
 
 <span class="tag">Nmap</span>
 
@@ -147,69 +216,69 @@ por actores maliciosos.
 
 <span class="tag">Metasploit</span>
 
+<span class="tag">Netcat</span>
+
 <span class="tag">Linux</span>
 
+<span class="tag">Windows</span>
+
+<span class="tag">HTTP</span>
+
+<span class="tag">DNS</span>
 
 </div>
 
+<div class="card">
 
+<h2>📚 Laboratorios realizados</h2>
 
+<p>
 
+En esta sección agregaré los laboratorios y ejercicios desarrollados durante la preparación de la certificación, incluyendo capturas de pantalla, metodología utilizada, comandos empleados y las conclusiones obtenidas en cada escenario.
+
+</p>
+
+</div>
 
 <div class="card">
 
-<h2>
-📜 Evidencia
-</h2>
-
+<h2>📜 Evidencia</h2>
 
 <ul>
 
-<li>Certificación HTB CJCA</li>
+<li>Certificado oficial Hack The Box CJCA.</li>
 
-<li>Labs completados</li>
+<li>Badge digital.</li>
 
-<li>Writeups técnicos</li>
+<li>Fecha de obtención.</li>
 
+<li>Capturas de laboratorios.</li>
+
+<li>Enlace al certificado.</li>
 
 </ul>
 
 </div>
 
-
-
-
-
 <div class="card">
 
-
-<h2>
-💡 Reflexión personal
-</h2>
-
+<h2>💡 Reflexión personal</h2>
 
 <p>
 
-Esta certificación permitió comprender el ciclo de ataque
-desde una perspectiva práctica, fortaleciendo la capacidad
-de análisis y comprensión de técnicas utilizadas por atacantes.
+La preparación para la certificación CJCA fortaleció mi capacidad para analizar sistemas desde una perspectiva práctica, comprender el comportamiento de posibles atacantes y desarrollar una metodología estructurada para la investigación de incidentes. Considero que representa una excelente base para desempeñarme como SOC Analyst L1 y continuar profundizando en análisis de amenazas, detección y respuesta a incidentes.
 
 </p>
 
-
 </div>
 
-
-
 </div>
-
 
 <footer>
 
 Sebastian Lemoine | Cybersecurity Portfolio
 
 </footer>
-
 
 </body>
 
