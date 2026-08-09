@@ -610,6 +610,407 @@ details summary::-webkit-details-marker{display:none}
 					</details>
 				</td>
 			</tr>
+			<tr>
+				<td>Feb, 28, 2022, 10:48 PM</td>
+				<td>SOC169</td>
+				<td>Possible IDOR Attack Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa desde la dirección IP externa <span class="code-box">134.209.118.137</span> contra el servidor <span class="code-box">WebServer1005</span> (<span class="code-box">172.16.17.15</span>) mediante múltiples solicitudes POST al endpoint <span class="code-box">/get_user_info/</span>.
+
+						Las solicitudes modificaron el parámetro <span class="code-box">user_id</span>, accediendo secuencialmente a diferentes identificadores: <span class="code-box">1</span>, <span class="code-box">2</span>, <span class="code-box">4</span> y <span class="code-box">5</span>. Todas las solicitudes fueron permitidas y devolvieron código HTTP <span class="code-box">200</span>, presentando diferentes tamaños de respuesta. Esto indica que el servidor procesó correctamente las solicitudes y devolvió contenido asociado a cada identificador consultado.
+
+						El patrón observado es compatible con un posible IDOR (Insecure Direct Object Reference), donde un usuario puede modificar directamente un identificador utilizado por la aplicación para acceder a objetos o información perteneciente a otros usuarios. Sin embargo, con los registros disponibles no es posible determinar qué información fue devuelta ni confirmar que los identificadores consultados correspondieran efectivamente a otros usuarios.
+
+						La actividad se produjo entre las <span class="code-box">22:45</span> y <span class="code-box">22:48</span> del <span class="code-box">28-Feb-2022</span>, utilizando la misma dirección IP de origen y el mismo endpoint, lo que refuerza la hipótesis de una actividad automatizada de enumeración de identificadores.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">134.209.118.137</span>
+						- IP de destino: <span class="code-box">172.16.17.15</span>
+						- Host: <span class="code-box">WebServer1005</span>
+						- Endpoint: <span class="code-box">/get_user_info/</span>
+						- Parámetro manipulado: <span class="code-box">user_id</span>
+						- Identificadores consultados: <span class="code-box">1</span>, <span class="code-box">2</span>, <span class="code-box">4</span>, <span class="code-box">5</span>
+
+						Se identificó un patrón consistente con posible enumeración y manipulación de referencias directas a objetos. No obstante, no se confirma explotación exitosa debido a la ausencia de evidencia sobre el contenido de las respuestas o acceso no autorizado a información de otros usuarios.
+
+						Se escala a SOC L2 para validar la vulnerabilidad IDOR, revisar el contenido de las respuestas HTTP, determinar el impacto potencial y aplicar las correcciones correspondientes en los controles de autorización de la aplicación.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 05, 2022, 10:29 AM</td>
+				<td>SOC164</td>
+				<td>Suspicious Mshta Behavior</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1218.005</span><span class="tag">T1059.001</span><span class="tag">T1027</span><span class="tag">T1105</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el endpoint <span class="code-box">Roberto</span> (<span class="code-box">172.16.17.38</span>) relacionada con la ejecución de un archivo HTA de baja reputación mediante <span class="code-box">mshta.exe</span>. La ejecución del archivo <span class="code-box">Ps1.hta</span> activó la alerta debido a su baja reputación y posteriormente se observó actividad de PowerShell asociada.
+
+						Durante el análisis se identificó código PowerShell ofuscado mediante valores hexadecimales, utilizado para construir dinámicamente un objeto <span class="code-box">WebClient</span> y establecer una conexión hacia la dirección IP externa <span class="code-box">193.142.58.23</span> con el objetivo de obtener el archivo <span class="code-box">Server.txt</span>.
+
+						Posteriormente, el contenido obtenido fue ejecutado mediante <span class="code-box">Invoke-Expression (iEX)</span>. La secuencia observada presenta una cadena de ejecución <span class="code-box">MSHTA → PowerShell → Ofuscación → Descarga de contenido remoto → Ejecución</span>, comportamiento consistente con actividad maliciosa y posible compromiso del endpoint.
+
+						Los registros de procesos disponibles no contienen timestamp ni PID. Esta ausencia limita la reconstrucción precisa de la secuencia temporal, pero por sí sola no permite determinar que los datos hayan sido eliminados intencionalmente ni constituye evidencia suficiente de una técnica de evasión.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">Roberto</span>
+						- IP: <span class="code-box">172.16.17.38</span>
+						- Archivo HTA: <span class="code-box">Ps1.hta</span>
+						- IP externa: <span class="code-box">193.142.58.23</span>
+						- Archivo descargado: <span class="code-box">Server.txt</span>
+						- Ejecución: <span class="code-box">mshta.exe</span>
+						- PowerShell: <span class="code-box">Invoke-Expression (iEX)</span>
+
+						Se clasifica como True Positive debido a la correlación de ejecución mediante <span class="code-box">mshta.exe</span>, PowerShell ofuscado, conexión a infraestructura externa, descarga de contenido y ejecución mediante <span class="code-box">Invoke-Expression</span>.
+
+						Se recomienda aislar el endpoint y escalar a SOC L2 para realizar análisis profundo del proceso, conexiones de red, contenido descargado, posibles mecanismos de persistencia y actividad posterior asociada a la IP <span class="code-box">193.142.58.23</span>.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Nov, 09, 2023, 09:47 AM</td>
+				<td>SOC235</td>
+				<td>Atlassian Confluence Broken Access Control 0-Day CVE-2023-22515</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad de explotación contra Confluence Data Center (<span class="code-box">172.16.17.234</span>) desde la dirección IP externa <span class="code-box">43.130.1.222</span>, asociada a un posible intento de explotación de la vulnerabilidad <span class="code-box">CVE-2023-22515</span>, relacionada con un fallo de control de acceso en Atlassian Confluence.
+
+						Inicialmente, el atacante realizó una solicitud GET hacia <span class="code-box">/server-info.action</span> manipulando el parámetro <span class="code-box">setupComplete=false</span>, utilizando el User-Agent <span class="code-box">curl/7.88.1</span>. La respuesta HTTP <span class="code-box">200</span> indica que el servidor procesó correctamente la solicitud.
+
+						Seguidamente, desde la misma dirección IP se observó una solicitud POST hacia <span class="code-box">/setup/setupadministrator.action</span>, seguida de otra solicitud POST hacia <span class="code-box">/setup/finishsetup.action</span>, esta última con respuesta HTTP <span class="code-box">200</span>. Esta secuencia resulta especialmente relevante debido a que coincide con el flujo utilizado para intentar configurar una cuenta administrativa durante la explotación de <span class="code-box">CVE-2023-22515</span>.
+
+						La actividad fue permitida por el dispositivo y presenta una secuencia coherente de manipulación del estado de configuración, acceso al flujo de configuración administrativa y finalización de la configuración. Esto constituye evidencia fuerte de un intento de explotación.
+
+						Sin embargo, con los registros proporcionados no se confirma que se haya creado exitosamente una cuenta administrativa ni que el atacante haya obtenido privilegios administrativos dentro de Confluence.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">43.130.1.222</span>
+						- IP de destino: <span class="code-box">172.16.17.234</span>
+						- Host: <span class="code-box">Confluence Data Center</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2023-22515</span>
+						- Endpoint: <span class="code-box">/server-info.action</span>
+						- Endpoint: <span class="code-box">/setup/setupadministrator.action</span>
+						- Endpoint: <span class="code-box">/setup/finishsetup.action</span>
+						- Parámetro: <span class="code-box">setupComplete=false</span>
+						- User-Agent: <span class="code-box">curl/7.88.1</span>
+
+						Se observa secuencia que consistente con el flujo de explotación de una vulnerabilidad conocida de control de acceso en Confluence. No obstante, no se confirma compromiso exitoso ni creación de una cuenta administrativa con la evidencia disponible.
+
+						Se escala a SOC L2 para validar la existencia de nuevas cuentas administrativas, revisar cambios de configuración, autenticaciones posteriores y actividad asociada a la IP <span class="code-box">43.130.1.222</span>. Se recomienda verificar la versión de Confluence y aplicar las medidas de mitigación o actualización correspondientes.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Nov, 21, 2023, 12:24 PM</td>
+				<td>SOC239</td>
+				<td>Remote Code Execution Detected in Splunk Enterprise</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059</span><span class="tag">T1136.001</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa contra Splunk Enterprise (<span class="code-box">172.16.20.13</span>) desde la dirección IP externa <span class="code-box">180.101.88.240</span> el <span class="code-box">21-Nov-2023</span> a las <span class="code-box">12:24 PM</span>.
+
+						A las <span class="code-box">12:23:56</span>, se registró una solicitud HTTP POST hacia <span class="code-box">18.219.80.54:8000/account/login</span>, utilizando el usuario <span class="code-box">admin</span> y una contraseña específica, con respuesta HTTP <span class="code-box">200</span>. Este evento demuestra que la solicitud de autenticación fue procesada por el servidor; sin embargo, el código HTTP 200 por sí solo no confirma que las credenciales hayan sido válidas.
+
+						Posteriormente, a las <span class="code-box">12:24</span>, se detectó una solicitud hacia el endpoint <span class="code-box">__upload/indexing/preview</span> utilizando el parámetro <span class="code-box">input.path=shell.xsl</span> junto con <span class="code-box">props.NO_BINARY_CHECK=1</span>. El archivo <span class="code-box">shell.xsl</span> fue identificado como malicioso y la actividad fue asociada a un posible intento de Remote Code Execution (RCE) mediante una carga XSLT.
+
+						Inmediatamente después de la explotación se observaron comandos ejecutados en el sistema, incluyendo <span class="code-box">whoami</span> y <span class="code-box">groups</span>, seguidos de <span class="code-box">useradd -m analyst</span> y <span class="code-box">passwd analyst</span>. Esta actividad proporciona evidencia de ejecución de comandos posterior a la explotación y de creación de una cuenta local denominada <span class="code-box">analyst</span>, potencialmente utilizada para mantener acceso al sistema.
+
+						Posteriormente se registraron conexiones desde <span class="code-box">180.101.88.240</span> hacia <span class="code-box">18.219.80.54:54321</span>, asociadas al proceso <span class="code-box">shell.sh</span>. Debido a su proximidad temporal con la explotación y la ejecución de comandos, este tráfico resulta sospechoso y podría corresponder a una comunicación de retorno. Sin embargo, con los registros disponibles no es posible confirmar que se trate de una reverse shell.
+
+						La secuencia completa presenta un patrón altamente consistente con compromiso del sistema: acceso inicial, explotación de Splunk, ejecución de comandos, reconocimiento, creación de una cuenta local y posible comunicación con infraestructura externa.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">180.101.88.240</span>
+						- IP de destino: <span class="code-box">18.219.80.54</span>
+						- Splunk Enterprise: <span class="code-box">172.16.20.13</span>
+						- Puerto: <span class="code-box">8000</span>
+						- Puerto sospechoso: <span class="code-box">54321</span>
+						- Endpoint: <span class="code-box">__upload/indexing/preview</span>
+						- Payload: <span class="code-box">shell.xsl</span>
+						- Parámetro: <span class="code-box">input.path=shell.xsl</span>
+						- Parámetro: <span class="code-box">props.NO_BINARY_CHECK=1</span>
+						- Proceso: <span class="code-box">shell.sh</span>
+						- Cuenta creada: <span class="code-box">analyst</span>
+
+						Evidencia de ejecución de comandos posterior a la explotación y creación de una nueva cuenta local. La actividad de red posterior incrementa la sospecha de comunicación con infraestructura externa, aunque no se confirma como reverse shell únicamente con estos registros.
+
+						Se escala a SOC L2 para aislamiento y contención del servidor, revisión de la cuenta <span class="code-box">analyst</span>, análisis del proceso <span class="code-box">shell.sh</span>, revisión de conexiones de red y búsqueda de mecanismos de persistencia. Se recomienda realizar hunting sobre la IP <span class="code-box">180.101.88.240</span>, el archivo <span class="code-box">shell.xsl</span> y cualquier actividad posterior al momento de la explotación.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Dec, 12, 2023, 02:15 PM</td>
+				<td>SOC246</td>
+				<td>Forced Authentication Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1046</span><span class="tag">T1110</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa proveniente de la dirección IP <span class="code-box">120.48.36.175</span> contra el servidor <span class="code-box">WebServer_Test</span> (<span class="code-box">104.26.15.61</span>) el <span class="code-box">12-Dec-2023</span>. La actividad observada presenta una secuencia de reconocimiento de servicios seguida de múltiples intentos de autenticación contra la aplicación web.
+
+						Antes de los intentos de autenticación, la misma dirección IP realizó conexiones hacia distintos puertos del servidor, incluyendo <span class="code-box">110</span> (POP3), <span class="code-box">443</span> (HTTPS), <span class="code-box">3000</span>, <span class="code-box">3389</span> (RDP) y <span class="code-box">21</span> (FTP). La mayoría de estas conexiones fueron bloqueadas por el firewall, mientras que la conexión hacia el puerto <span class="code-box">3000</span> fue permitida.
+
+						Posteriormente, a las <span class="code-box">14:05</span> y <span class="code-box">14:06</span>, se observaron múltiples solicitudes HTTP POST hacia <span class="code-box">/accounts/login</span>, utilizando diferentes combinaciones de credenciales, incluyendo <span class="code-box">root:123456</span> y <span class="code-box">admin:12345</span>. El uso de múltiples combinaciones de usuario y contraseña contra el mismo servicio es consistente con un intento de Brute Force.
+
+						La secuencia temporal resulta especialmente relevante debido a que primero se observó reconocimiento de servicios y posteriormente intentos de autenticación. Este comportamiento incrementa la sospecha de actividad dirigida contra el servidor y no corresponde a un intento aislado de inicio de sesión.
+
+						No obstante, con los registros disponibles no se confirma que alguna de las credenciales utilizadas haya sido válida ni que se haya obtenido acceso exitoso al sistema.
+
+						La conexión hacia el puerto <span class="code-box">3000</span> fue permitida por el firewall, por lo que se recomienda identificar el servicio expuesto en dicho puerto y revisar si existió actividad posterior asociada a la misma dirección IP.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">120.48.36.175</span>
+						- IP de destino: <span class="code-box">104.26.15.61</span>
+						- Host: <span class="code-box">WebServer_Test</span>
+						- Endpoint: <span class="code-box">/accounts/login</span>
+						- Puerto POP3: <span class="code-box">110</span>
+						- Puerto HTTPS: <span class="code-box">443</span>
+						- Puerto permitido: <span class="code-box">3000</span>
+						- Puerto RDP: <span class="code-box">3389</span>
+						- Puerto FTP: <span class="code-box">21</span>
+						- Credencial observada: <span class="code-box">root:123456</span>
+						- Credencial observada: <span class="code-box">admin:12345</span>
+
+						Combinación de reconocimiento de servicios y múltiples intentos de autenticación utilizando diferentes credenciales. Sin embargo, no existe evidencia suficiente para confirmar una autenticación exitosa o un compromiso del servidor.
+
+						Se escala a SOC L2 para investigar el servicio expuesto en el puerto <span class="code-box">3000</span>, revisar los registros de autenticación y determinar si alguno de los intentos fue exitoso. Se recomienda además realizar hunting sobre la IP <span class="code-box">120.48.36.175</span> para identificar actividad adicional contra otros activos de la organización.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Dec, 27, 2023, 11:22 AM</td>
+				<td>SOC250</td>
+				<td>APT35 HyperScrape Data Exfiltration Tool Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1078</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad maliciosa en el endpoint <span class="code-box">Arthur</span> (<span class="code-box">172.16.17.72</span>) asociada a la ejecución de <span class="code-box">EmailDownloader.exe</span>, ubicado en <span class="code-box">C:\Users\LetsDefend\Downloads\EmailDownloader.exe</span>. El archivo fue ejecutado mediante <span class="code-box">Explorer.exe</span> y presenta un hash SHA-256 identificado como malicioso por <span class="code-box">50 de 69</span> motores de seguridad en VirusTotal, constituyendo un indicador de compromiso de alta confianza.
+
+						Antes de la ejecución del archivo, a las <span class="code-box">11:17</span>, se registró un evento Windows <span class="code-box">4624</span> con <span class="code-box">Logon Type 10</span> (Remote Interactive Logon) desde la dirección IP externa <span class="code-box">173.209.51.54</span>. Este evento confirma una autenticación remota exitosa sobre el endpoint.
+
+						A las <span class="code-box">11:22</span>, coincidiendo con la ejecución de <span class="code-box">EmailDownloader.exe</span>, se registró una conexión de salida desde el proceso hacia la dirección IP externa <span class="code-box">136.243.108.14</span> mediante el puerto <span class="code-box">80</span> (HTTP). La conexión fue exitosa y se encuentra directamente asociada al proceso identificado como malicioso.
+
+						La correlación entre una autenticación remota exitosa, la ejecución de un archivo identificado como malicioso y una conexión HTTP externa posterior proporciona evidencia sólida de actividad de compromiso del endpoint. La identificación de <span class="code-box">EmailDownloader.exe</span> como una herramienta asociada a APT35 HyperScrape incrementa significativamente el nivel de sospecha.
+
+						La conexión externa podría estar relacionada con la transferencia o exfiltración de información, pero con los registros disponibles no es posible confirmar que se haya producido una exfiltración exitosa de datos.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">Arthur</span>
+						- IP interna: <span class="code-box">172.16.17.72</span>
+						- IP de acceso remoto: <span class="code-box">173.209.51.54</span>
+						- IP de conexión externa: <span class="code-box">136.243.108.14</span>
+						- Archivo: <span class="code-box">EmailDownloader.exe</span>
+						- Ruta: <span class="code-box">C:\Users\LetsDefend\Downloads\EmailDownloader.exe</span>
+						- Proceso padre: <span class="code-box">Explorer.exe</span>
+						- Evento Windows: <span class="code-box">4624</span>
+						- Logon Type: <span class="code-box">10</span>
+						- Puerto de salida: <span class="code-box">80</span>
+						- Protocolo: <span class="code-box">HTTP</span>
+
+						Presencia de un archivo identificado como malicioso y la correlación temporal con una autenticación remota exitosa y una conexión externa generada por el mismo proceso.
+
+						Se escala a SOC L2 para aislamiento inmediato del endpoint, análisis de <span class="code-box">EmailDownloader.exe</span>, revisión de la sesión remota asociada a <span class="code-box">173.209.51.54</span> y análisis de las comunicaciones con <span class="code-box">136.243.108.14</span>. Se recomienda realizar hunting de estos IOCs en otros endpoints, revisar posibles mecanismos de persistencia y evidencia de exfiltración para confirmar TTPs.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jan, 01, 2024, 12:37 PM</td>
+				<td>SOC251</td>
+				<td>Quishing Detected (QR Code Phishing)</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1598</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó un correo electrónico sospechoso dirigido a <span class="code-box">Claire@letsdefend.io</span>, enviado desde <span class="code-box">security@microsecmfa.com</span> mediante la dirección IP <span class="code-box">158.69.201.47</span>. El mensaje se presentó como una supuesta comunicación de Microsoft relacionada con una actualización obligatoria de MFA y solicitó a la destinataria escanear un código QR para configurar un nuevo dispositivo de autenticación.
+
+						El contenido utilizó técnicas de ingeniería social, incluyendo la suplantación de una entidad legítima, generación de urgencia y amenaza de pérdida de acceso al correo si no se completaba la supuesta actualización de seguridad. Este comportamiento es consistente con un ataque de Quishing (QR Code Phishing), cuyo objetivo potencial es dirigir al usuario hacia infraestructura controlada por el atacante para obtener credenciales o información relacionada con la autenticación.
+
+						El correo fue permitido por el sistema de correo, por lo que el mensaje pudo llegar al destinatario. Sin embargo, en los registros proporcionados no se observa evidencia de que <span class="code-box">Claire@letsdefend.io</span> haya interactuado con el mensaje, escaneado el código QR, accedido a un sitio externo, ingresado credenciales o completado una autenticación.
+
+						Por lo tanto, la evidencia disponible permite confirmar un intento de phishing mediante código QR y la entrega del correo, pero no permite confirmar interacción del usuario ni compromiso de la cuenta.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Destinatario: <span class="code-box">Claire@letsdefend.io</span>
+						- Remitente: <span class="code-box">security@microsecmfa.com</span>
+						- IP de origen: <span class="code-box">158.69.201.47</span>
+						- Dominio remitente: <span class="code-box">microsecmfa.com</span>
+						- Técnica: <span class="code-box">Quishing / QR Code Phishing</span>
+						- Vector: <span class="code-box">Código QR</span>
+						- Servicio suplantado: <span class="code-box">Microsoft MFA</span>
+
+						El contenido del correo presenta características claras de una campaña de Quishing orientada al robo potencial de credenciales o información de autenticación. No se confirma compromiso de la cuenta debido a la ausencia de evidencia de interacción por parte del usuario.
+
+						Se escala a SOC L2 para bloquear el dominio remitente y la infraestructura asociada, identificar la URL contenida en el código QR y verificar si otros usuarios recibieron el mismo mensaje. Se recomienda realizar hunting sobre el dominio y la IP de origen y fortalecer las reglas de detección para bloquear campañas similares automáticamente.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Feb, 28, 2024, 08:42 AM</td>
+				<td>SOC205</td>
+				<td>Malicious Macro has been executed</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1204.002</span><span class="tag">T1059.001</span><span class="tag">T1105</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad maliciosa en el endpoint <span class="code-box">Jayne</span> (<span class="code-box">172.16.17.198</span>) asociada al archivo <span class="code-box">edit1-invoice.docm</span>, almacenado en el directorio de descargas y detectado como malicioso por <span class="code-box">30 de 65</span> motores de seguridad. El archivo utiliza la extensión <span class="code-box">.docm</span>, compatible con documentos de Microsoft Office que pueden contener macros, y la alerta indica que una macro maliciosa fue ejecutada.
+
+						A las <span class="code-box">08:41</span>, <span class="code-box">Explorer.exe</span> creó el archivo <span class="code-box">edit1-invoice.docm.zip</span> en el directorio <span class="code-box">Downloads</span>. Un minuto después, PowerShell realizó una consulta DNS hacia <span class="code-box">www.greyhathacker.net</span>, que resolvió a la dirección IP <span class="code-box">92.204.221.16</span>.
+
+						Posteriormente, un evento PowerShell Script Block Logging (<span class="code-box">Event ID 4104</span>) registró la descarga del archivo <span class="code-box">messbox.exe</span> mediante <span class="code-box">System.Net.WebClient.DownloadFile</span>, almacenándolo localmente como <span class="code-box">mess.exe</span>. Inmediatamente después se observó el uso de <span class="code-box">Start-Process</span>, proporcionando evidencia directa de la ejecución del binario descargado.
+
+						La correlación entre la apertura o ejecución de un documento habilitado para macros, actividad de PowerShell, resolución DNS hacia infraestructura externa, descarga de un ejecutable y ejecución posterior constituye una cadena de compromiso consistente con actividad maliciosa.
+
+						El evento <span class="code-box">4104</span> proporciona evidencia directa de que el código PowerShell fue ejecutado. Aunque no existen registros adicionales de navegador, línea de comandos o actividad posterior en el endpoint, la secuencia observada es suficiente para confirmar actividad maliciosa.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">Jayne</span>
+						- IP interna: <span class="code-box">172.16.17.198</span>
+						- Archivo: <span class="code-box">edit1-invoice.docm</span>
+						- Archivo ZIP: <span class="code-box">edit1-invoice.docm.zip</span>
+						- Dominio: <span class="code-box">www.greyhathacker.net</span>
+						- IP resuelta: <span class="code-box">92.204.221.16</span>
+						- Archivo descargado: <span class="code-box">messbox.exe</span>
+						- Nombre utilizado localmente: <span class="code-box">mess.exe</span>
+						- Técnica de descarga: <span class="code-box">System.Net.WebClient.DownloadFile</span>
+						- Ejecución: <span class="code-box">Start-Process</span>
+						- Event ID: <span class="code-box">4104</span>
+
+						Evidencia directa de ejecución de PowerShell y descarga y ejecución de un binario posterior a la actividad asociada al documento malicioso.
+
+						Se escala a SOC L2 para aislamiento inmediato del endpoint, análisis de <span class="code-box">mess.exe</span>, revisión de conexiones hacia <span class="code-box">92.204.221.16</span>, búsqueda de persistencia y hunting del dominio <span class="code-box">www.greyhathacker.net</span> y de los archivos asociados en otros endpoints.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Apr, 19, 2024, 08:23 AM</td>
+				<td>SOC275</td>
+				<td>Application Token Steal Attempt Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1528</span><span class="tag">T1190</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa dirigida al mecanismo de recuperación de contraseña de la aplicación asociada al usuario <span class="code-box">gloriana@letsdefend.io</span> el <span class="code-box">19-Apr-2024</span> a las <span class="code-box">08:23 AM</span>.
+
+						A las <span class="code-box">08:23:46</span>, se registró una solicitud HTTP POST hacia <span class="code-box">/reset-password</span> que incluía el parámetro <span class="code-box">token=123letsdefendisthebest123</span>. La solicitud utilizó el encabezado <span class="code-box">X-Forwarded-Host</span> apuntando al dominio <span class="code-box">homespottersf.com</span> y obtuvo una respuesta HTTP <span class="code-box">200</span>.
+
+						La presencia de un token directamente dentro de una solicitud dirigida al mecanismo de recuperación de contraseña es consistente con un intento de manipulación o abuso del proceso de recuperación de cuenta. Sin embargo, los registros disponibles no permiten confirmar que el atacante haya obtenido un token legítimo, ni que el token haya sido utilizado exitosamente para acceder a la cuenta o modificar sus credenciales.
+
+						Adicionalmente, el dispositivo registró la acción como <span class="code-box">Redirect</span>, por lo que la solicitud no necesariamente completó el proceso de recuperación de contraseña de forma directa.
+
+						No se observa evidencia de autenticación posterior, cambio exitoso de contraseña o acceso confirmado a la cuenta <span class="code-box">gloriana@letsdefend.io</span>. Por lo tanto, la evidencia disponible permite confirmar un intento sospechoso de abuso del mecanismo de recuperación, pero no un robo de token exitoso ni un compromiso de la cuenta.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Usuario objetivo: <span class="code-box">gloriana@letsdefend.io</span>
+						- Endpoint: <span class="code-box">/reset-password</span>
+						- Token observado: <span class="code-box">123letsdefendisthebest123</span>
+						- Host utilizado: <span class="code-box">homespottersf.com</span>
+						- Parámetro: <span class="code-box">X-Forwarded-Host</span>
+						- Acción del dispositivo: <span class="code-box">Redirect</span>
+						- Respuesta HTTP: <span class="code-box">200</span>
+
+						La actividad sospechosa dirigida al mecanismo de recuperación de contraseña y al intento de manipulación mediante un token. No se confirma que el token haya sido robado o utilizado exitosamente.
+
+						Se escala a SOC L2 para validar si el token observado era válido, determinar si fue utilizado posteriormente, revisar posibles autenticaciones asociadas a la cuenta y verificar si existió un cambio de contraseña exitoso. También se recomienda investigar el dominio <span class="code-box">homespottersf.com</span> y realizar hunting sobre actividad relacionada con el usuario afectado.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jul, 22, 2025, 01:07 PM</td>
+				<td>SOC342</td>
+				<td>CVE-2025-53770 SharePoint ToolShell Auth Bypass and RCE</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059.001</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó una solicitud HTTP POST no autenticada desde la dirección IP externa <span class="code-box">107.191.58.76</span> hacia el servidor SharePoint01 (<span class="code-box">172.16.20.17</span>) el <span class="code-box">22-Jul-2025</span> a las <span class="code-box">01:07 PM</span>. La solicitud fue dirigida al endpoint <span class="code-box">/_layouts/15/ToolPane.aspx</span>, presentó un payload de <span class="code-box">7699 bytes</span> y utilizó un Referer manipulado hacia <span class="code-box">SignOut.aspx</span>.
+
+						La actividad coincide con el patrón de explotación asociado a <span class="code-box">CVE-2025-53770</span> (ToolShell) y fue permitida por el dispositivo de seguridad. Posteriormente, en el endpoint se identificó la ejecución de PowerShell utilizando los parámetros <span class="code-box">-nop -w hidden -e</span>, indicando la ejecución de un comando codificado mediante Base64.
+
+						Tras la decodificación del contenido se identificó código C# que utiliza reflexión para acceder a <span class="code-box">System.Web.Configuration.MachineKeySection</span> y obtener información sensible de la configuración criptográfica de ASP.NET, incluyendo <span class="code-box">ValidationKey</span> y <span class="code-box">DecryptionKey</span>. El acceso a estas claves resulta especialmente relevante debido a su posible utilización para comprometer mecanismos de autenticación o generar contenido criptográficamente válido dentro del entorno SharePoint.
+
+						A las <span class="code-box">13:07:27</span>, se ejecutó <span class="code-box">csc.exe</span> para compilar el archivo <span class="code-box">C:\Windows\Temp\payload.cs</span> en <span class="code-box">C:\Windows\Temp\payload.exe</span>. Esto evidencia la compilación de una carga ejecutable directamente en el servidor comprometido.
+
+						Posteriormente, a las <span class="code-box">13:07:29</span>, <span class="code-box">cmd.exe</span> creó el archivo <span class="code-box">C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\16\TEMPLATE\LAYOUTS\spinstall0.aspx</span>. El contenido del archivo incluía una referencia hacia <span class="code-box">http://107.191.58.76/payload.exe</span>, estableciendo una relación directa entre el archivo creado dentro del directorio de SharePoint y la infraestructura externa utilizada durante la explotación.
+
+						Finalmente, a las <span class="code-box">13:07:34</span>, se ejecutó nuevamente PowerShell para acceder a <span class="code-box">MachineKeySection</span>.
+
+						La secuencia observada - explotación de SharePoint, ejecución de PowerShell, extracción de claves criptográficas, compilación de un payload, creación de un archivo ASPX dentro del directorio de SharePoint y referencia a infraestructura externa — proporciona evidencia fuerte de compromiso exitoso del servidor y ejecución de código posterior a la explotación.
+
+						La creación de <span class="code-box">spinstall0.aspx</span> dentro del directorio <span class="code-box">LAYOUTS</span> es particularmente relevante porque puede permitir establecer un mecanismo de ejecución persistente mediante una aplicación web o web shell. Se requiere investigación adicional para determinar exactamente la funcionalidad del archivo y si fue utilizado posteriormente.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">107.191.58.76</span>
+						- Servidor: <span class="code-box">SharePoint01</span>
+						- IP interna: <span class="code-box">172.16.20.17</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2025-53770</span>
+						- Endpoint: <span class="code-box">/_layouts/15/ToolPane.aspx</span>
+						- Referer: <span class="code-box">SignOut.aspx</span>
+						- Payload: <span class="code-box">7699 bytes</span>
+						- PowerShell: <span class="code-box">-nop -w hidden -e</span>
+						- Componente: <span class="code-box">System.Web.Configuration.MachineKeySection</span>
+						- Clave: <span class="code-box">ValidationKey</span>
+						- Clave: <span class="code-box">DecryptionKey</span>
+						- Código fuente: <span class="code-box">C:\Windows\Temp\payload.cs</span>
+						- Ejecutable: <span class="code-box">C:\Windows\Temp\payload.exe</span>
+						- Compilador: <span class="code-box">csc.exe</span>
+						- Archivo ASPX: <span class="code-box">spinstall0.aspx</span>
+						- Ruta: <span class="code-box">C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\16\TEMPLATE\LAYOUTS\spinstall0.aspx</span>
+						- Payload externo: <span class="code-box">http://107.191.58.76/payload.exe</span>
+
+						Evidencia directa de explotación y múltiples acciones posteriores compatibles con ejecución de código y compromiso del servidor. La creación de un archivo ASPX dentro del directorio de SharePoint y la compilación de un ejecutable aumentan significativamente la probabilidad de persistencia y actividad posterior a la explotación.
+
+						Se escala inmediatamente a SOC L2 para aislamiento y contención del servidor SharePoint, preservación de evidencia, análisis de <span class="code-box">spinstall0.aspx</span>, <span class="code-box">payload.exe</span> y <span class="code-box">payload.cs</span>, revisión de las claves criptográficas potencialmente expuestas y hunting de la IP <span class="code-box">107.191.58.76</span> en todo el entorno. Se recomienda revisar otros servidores SharePoint en busca de explotación de la misma vulnerabilidad y aplicar las medidas de mitigación y actualización correspondientes.
+						</div>
+					</details>
+				</td>
+			</tr>
 		</tbody>
 		</table>
 </div>
