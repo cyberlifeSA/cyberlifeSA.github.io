@@ -27,7 +27,7 @@ details div{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
 details summary{cursor:pointer;color:#38bdf8;font-weight:700;outline:none;list-style:none}
 details summary::-webkit-details-marker{display:none}
 .sev{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
-.sev.critical{background:#dc2626;color:#fff}.sev.alta{background:#c2410c;color:#fff}.sev.medium{background:#f59e0b;color:#020617}.sev.low{background:#10b981;color:#fff}
+.sev.critical{background:#dc2626;color:#fff}.sev.alta{background:#c2410c;color:#fff}.sev.medium{background:#f59e0b;color:#fff}.sev.low{background:#10b981;color:#fff}
 .result{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
 .result.tp{border:1px solid #10b981;color:#10b981;background:rgba(16,185,129,0.08)}
 .result.fp{border:1px solid #dc2626;color:#dc2626;background:rgba(220,38,38,0.08)}
@@ -503,6 +503,109 @@ details summary::-webkit-details-marker{display:none}
 						- Vulnerabilidad: <span class="code-box">CVE-2022-30190</span>
 
 						Se clasifica como True Positive debido a la combinación de apertura de un documento Office, ejecución de <span class="code-box">msdt.exe</span> y posterior actividad de decodificación, extracción y ejecución de archivos. Se aísla el endpoint y se escala a SOC L2 para realizar deep inspection y Threat Hunting (THT), validando posible persistencia, ejecución posterior y movimiento lateral.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Feb, 13, 2024, 02:04 AM</td>
+				<td>SOC257</td>
+				<td>VPN Connection Detected from Unauthorized Country</td>
+				<td>Low</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1133</span><span class="tag">T1082</span><span class="tag">T1016</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectaron intentos de autenticación VPN desde la dirección IP externa <span class="code-box">113.161.158.12</span> hacia <span class="code-box">33.33.33.33</span>, asociados al usuario <span class="code-box">monica@letsdefend.io</span> y al endpoint <span class="code-box">Monica</span>, provenientes de un país no autorizado. Los registros disponibles no proporcionan evidencia suficiente para confirmar que alguno de los intentos de autenticación haya sido exitoso.
+						
+						Si bien se observó actividad de comandos en el endpoint <span class="code-box">Monica</span> el mismo día, no existe evidencia directa que vincule los intentos de autenticación VPN con la actividad de reconocimiento posterior. La diferencia temporal entre ambos eventos es de aproximadamente seis horas, lo que dificulta establecer una relación directa.
+						
+						<strong>Detalles del evento visto horas despues:</strong>
+						Posteriormente, entre las <span class="code-box">08:00</span> y <span class="code-box">10:15</span>, se registró la ejecución de múltiples comandos de reconocimiento del sistema y red, incluyendo <span class="code-box">systeminfo</span>, <span class="code-box">ipconfig /all</span>, <span class="code-box">netstat -ano</span>, <span class="code-box">tasklist</span>, <span class="code-box">driverquery</span>, <span class="code-box">net user</span> y <span class="code-box">wmic product get name</span>. Estos comandos son compatibles con actividades de System Discovery y Network Discovery.
+
+						Sin embargo, existe una diferencia temporal aproximada de seis horas entre los intentos de autenticación VPN y la actividad de reconocimiento posterior. Debido a esta diferencia, no es posible confirmar con la evidencia disponible que ambas actividades pertenezcan a la misma sesión o incidente.
+
+						Se recomienda correlacionar los registros de autenticación VPN, usuario asociado, proceso ejecutor y zona horaria para determinar si existe una relación entre ambos eventos antes de atribuir la actividad de reconocimiento a la conexión VPN.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">113.161.158.12</span>
+						- IP de destino: <span class="code-box">33.33.33.33</span>
+						- Usuario: <span class="code-box">monica@letsdefend.io</span>
+						- Endpoint: <span class="code-box">Monica</span>
+						- Comandos observados: <span class="code-box">systeminfo</span>, <span class="code-box">ipconfig /all</span>, <span class="code-box">netstat -ano</span>, <span class="code-box">tasklist</span>, <span class="code-box">driverquery</span>, <span class="code-box">net user</span>, <span class="code-box">wmic product get name</span>
+
+						La alerta se mantiene como True Positive debido a que se detectaron intentos de autenticación VPN desde una ubicación no autorizada. No obstante, no existe evidencia de autenticación exitosa ni evidencia suficiente para vincular directamente los intentos VPN con la actividad de reconocimiento posterior. Se recomienda validar los eventos de autenticación y, si se confirma compromiso, escalar a SOC L2 para profundizar en la actividad del endpoint.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 01, 2022, 11:06 AM</td>
+				<td>SOC163</td>
+				<td>Suspicious Certutil.exe Usage</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1082</span><span class="tag">T1016</span><span class="tag">T1046</span><span class="tag">T1552.001</span><span class="tag">T1059.001</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el endpoint <span class="code-box">EricProd</span> (<span class="code-box">172.16.17.22</span>) asociada al uso de <span class="code-box">certutil.exe</span> para descargar herramientas desde Internet. A las <span class="code-box">11:06</span> se utilizó <span class="code-box">certutil.exe</span> mediante <span class="code-box">certutil.exe -urlcache -split -f</span> para descargar <span class="code-box">nmap-7.92-setup.exe</span> desde <span class="code-box">nmap.org</span>. Posteriormente, a las <span class="code-box">11:07</span>, se utilizó nuevamente el mismo mecanismo para descargar <span class="code-box">windows-exploit-suggester.py</span> desde <span class="code-box">GitHub</span>, almacenándolo como <span class="code-box">check.py</span>. Ambas operaciones fueron permitidas por el EDR.
+
+						Antes de las descargas se observó una serie de comandos de reconocimiento, incluyendo <span class="code-box">whoami</span>, <span class="code-box">net user</span>, <span class="code-box">ipconfig /all</span>, <span class="code-box">net localgroup</span>, <span class="code-box">net start</span>, <span class="code-box">netstat</span>, <span class="code-box">tasklist</span> y <span class="code-box">systeminfo</span>. Estos comandos permitieron obtener información sobre el usuario, cuentas locales, configuración de red, grupos, servicios, conexiones, procesos y características del sistema.
+
+						Posteriormente se ejecutó Nmap mediante <span class="code-box">nmap -sV 192.168.0.0/24 -p 80</span>, realizando reconocimiento de servicios sobre la red interna. También se identificó la ejecución de <span class="code-box">python3 check.py</span>, lo que resulta especialmente relevante debido a que <span class="code-box">check.py</span> corresponde al Windows Exploit Suggester descargado previamente. Esta actividad es compatible con una evaluación del sistema en búsqueda de vulnerabilidades potencialmente explotables.
+
+						Más adelante se observó la ejecución de <span class="code-box">arp -a</span> y del comando <span class="code-box">findstr /si pass *.txt *.xml *.ini</span>, comportamiento compatible con la búsqueda de información potencialmente sensible o credenciales almacenadas en archivos. Finalmente, se registró la ejecución de <span class="code-box">powershell.exe -nop -exec bypass</span>, indicando un intento de ejecutar PowerShell evitando determinadas restricciones de seguridad.
+
+						Los registros indican además que los timestamps de los procesos fueron eliminados, por lo que la secuencia temporal debe interpretarse con cautela. No obstante, la correlación entre reconocimiento del sistema, descarga de herramientas, ejecución de Windows Exploit Suggester, escaneo de red, búsqueda de posibles credenciales y ejecución de PowerShell con bypass constituye un patrón altamente sospechoso y compatible con actividad de post-explotación.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Endpoint: <span class="code-box">EricProd</span>
+						- IP: <span class="code-box">172.16.17.22</span>
+						- Herramienta descargada: <span class="code-box">nmap-7.92-setup.exe</span>
+						- Herramienta descargada: <span class="code-box">windows-exploit-suggester.py</span>
+						- Archivo renombrado: <span class="code-box">check.py</span>
+						- Comando de descarga: <span class="code-box">certutil.exe -urlcache -split -f</span>
+						- Escaneo de red: <span class="code-box">nmap -sV 192.168.0.0/24 -p 80</span>
+						- Búsqueda de información sensible: <span class="code-box">findstr /si pass *.txt *.xml *.ini</span>
+						- PowerShell: <span class="code-box">powershell.exe -nop -exec bypass</span>
+
+						Se clasifica como True Positive debido a la correlación de múltiples actividades sospechosas que exceden el uso legítimo de <span class="code-box">certutil.exe</span>. Se procede a escalar a SOC L2 para realizar investigación del endpoint, aislamiento y contención. Se recomienda revisar procesos relacionados, conexiones de red, credenciales potencialmente expuestas, persistencia y posibles movimientos laterales.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Mar, 01, 2022, 10:10 AM</td>
+				<td>SOC170</td>
+				<td>Passwd Found in Requested URL - Possible LFI Attack</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó una solicitud HTTP GET desde la dirección IP externa <span class="code-box">106.55.45.162</span> hacia el servidor <span class="code-box">WebServer1006</span> (<span class="code-box">172.16.17.13</span>) mediante el puerto <span class="code-box">443</span>, utilizando el parámetro <span class="code-box">file</span> con la secuencia <span class="code-box">../../../../etc/passwd</span>.
+
+						La solicitud intentó acceder al archivo <span class="code-box">/etc/passwd</span> mediante un patrón característico de Local File Inclusion (LFI) y Path Traversal. La petición fue permitida por el firewall; sin embargo, el servidor respondió con HTTP <span class="code-box">500</span> y un tamaño de respuesta de <span class="code-box">0 bytes</span>. Por lo tanto, con los registros disponibles no existe evidencia de que el atacante haya logrado leer o extraer el contenido de <span class="code-box">/etc/passwd</span>.
+
+						La actividad ocurrió el <span class="code-box">01-Mar-2022</span> a las <span class="code-box">10:10 AM</span> contra <span class="code-box">WebServer1006</span>. El User-Agent utilizado fue <span class="code-box">MSIE 6.0 / Windows NT 5.1</span>, correspondiente a software obsoleto y potencialmente indicativo de actividad automatizada. Sin embargo, este indicador por sí solo no confirma una intrusión.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP de origen: <span class="code-box">106.55.45.162</span>
+						- IP de destino: <span class="code-box">172.16.17.13</span>
+						- Host: <span class="code-box">WebServer1006</span>
+						- Puerto: <span class="code-box">443</span>
+						- Parámetro: <span class="code-box">file</span>
+						- Payload: <span class="code-box">../../../../etc/passwd</span>
+						- Archivo objetivo: <span class="code-box">/etc/passwd</span>
+						- User-Agent: <span class="code-box">MSIE 6.0 / Windows NT 5.1</span>
+
+						Se confirmó un intento de explotación mediante Path Traversal/LFI. No obstante, la respuesta HTTP 500 y el tamaño de respuesta de 0 bytes no proporcionan evidencia de explotación exitosa o lectura del archivo solicitado.
 						</div>
 					</details>
 				</td>
