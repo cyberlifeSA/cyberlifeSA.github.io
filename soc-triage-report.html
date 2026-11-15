@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe de Triage SOC - LetsDefend</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#0b1120;color:#e5e7eb;line-height:1.6}
+header{height:40vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;background:linear-gradient(rgba(2,6,23,0.88),rgba(2,6,23,0.96)),url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31");background-size:cover;background-position:center}
+header h1{font-size:40px;color:#38bdf8}header p{max-width:900px;margin-top:10px}.btn{margin-top:20px;padding:10px 20px;background:#38bdf8;color:#020617;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block}
+section{padding:60px 4%}.title{text-align:center;font-size:32px;color:#38bdf8;margin-bottom:30px}
+.table-wrap{overflow-x:auto;background:transparent;padding:20px;margin:40px auto;max-width:1600px}
+table{width:100%;border-collapse:collapse;min-width:900px;margin:0 auto}
+th,td{padding:12px 10px;border-bottom:1px solid #1e293b;text-align:left}
+th:first-child, td:first-child{min-width:220px;white-space:nowrap}
+th{background:#0f1724;color:#93c5fd;font-weight:600}
+tr:hover td{background:#0b1220}
+.tag{display:inline-block;background:#1e293b;padding:6px 10px;border-radius:999px;color:#cbd5e1;margin-right:6px;font-size:13px}
+.note-link{color:#38bdf8;text-decoration:none;font-weight:600}
+.sev{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
+.sev.critical{background:#dc2626;color:#fff}.sev.high{background:#c2410c;color:#fff}.sev.medium{background:#f59e0b;color:#fff}.sev.low{background:#10b981;color:#fff}
+.result{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px}
+.result.tp{border:1px solid #10b981;color:#10b981;background:rgba(16,185,129,0.08)}
+.result.fp{border:1px solid #dc2626;color:#dc2626;background:rgba(220,38,38,0.08)}
+.code-box{display:inline-block;background:#111827;border:1px solid #334155;border-radius:8px;padding:2px 6px;margin:0 2px;font-family:Consolas,monospace;font-size:0.92em;color:#f8fafc}
+@media (max-width:700px){header h1{font-size:28px}.title{font-size:24px}}
+.report-section{max-width:1200px;margin:0 auto}
+.report-section h2{color:#38bdf8;margin:40px 0 20px;font-size:28px}
+.report-section h3{color:#93c5fd;margin:25px 0 15px;font-size:22px}
+.report-section p{margin:10px 0;color:#cbd5e1}
+.report-section ul,.report-section ol{margin:10px 0 10px 20px;color:#cbd5e1}
+.report-section li{margin:5px 0}
+.report-section strong{color:#f8fafc}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Informe de Triage SOC - LetsDefend</h1>
+<p>Documentacion de triage de alertas en un Centro de Operaciones de Seguridad (SOC). Analisis de endpoints, correos y logs mediante SIEM. Analista: Sebastian Lemoine.</p>
+<a href="alerts.html" class="btn">Volver a Alerts Dashboard</a>
+</header>
+
+<section>
+<div class="report-section">
+
+<h2>1. Resumen Ejecutivo</h2>
+<p>Se documentaron <strong>40 alertas de seguridad</strong> provenientes del panel de alertas de LetsDefend, simulando el flujo operativo de un SOC (Security Operations Center). Cada alerta fue sometida a triage, enriquecimiento de IOC, clasificacion de severidad, mapeo a MITRE ATT&CK y veredicto (TP/FP).</p>
+<ul>
+<li><strong>True Positives (TP):</strong> 39 (97.5%)</li>
+<li><strong>False Positives (FP):</strong> 1 (2.5%)</li>
+<li><strong>Severidad Critica:</strong> 8 alertas (20%)</li>
+<li><strong>Severidad Alta:</strong> 10 alertas (25%)</li>
+<li><strong>Severidad Media:</strong> 18 alertas (45%)</li>
+<li><strong>Severidad Baja:</strong> 4 alertas (10%)</li>
+</ul>
+
+<h2>2. Distribucion por Severidad</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Severidad</th><th>Cantidad</th><th>Porcentaje</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="sev critical">Critical</span></td><td>8</td><td>20%</td></tr>
+<tr><td><span class="sev high">High</span></td><td>10</td><td>25%</td></tr>
+<tr><td><span class="sev medium">Medium</span></td><td>18</td><td>45%</td></tr>
+<tr><td><span class="sev low">Low</span></td><td>4</td><td>10%</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>40</strong></td><td><strong>100%</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>3. Distribucion por Tipo de Amenaza</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Categoria</th><th>Cantidad</th><th>Alertas</th></tr>
+</thead>
+<tbody>
+<tr><td>Phishing</td><td>7</td><td>SOC120, SOC140, SOC141, SOC282, SOC153, SOC326, SOC251</td></tr>
+<tr><td>RCE / Exploitation</td><td>9</td><td>SOC335, SOC336, SOC338, SOC227, SOC274, SOC342, SOC329, SOC334, SOC175</td></tr>
+<tr><td>Malware / Stealer</td><td>5</td><td>SOC338, SOC202, SOC331, SOC333, SOC205</td></tr>
+<tr><td>Brute Force</td><td>3</td><td>SOC176, SOC210, SOC211</td></tr>
+<tr><td>APT Activity</td><td>4</td><td>SOC330, SOC331, SOC333, SOC250</td></tr>
+<tr><td>Cloud / Acceso no autorizado</td><td>2</td><td>SOC325, SOC257</td></tr>
+<tr><td>Otros (LFI, IDOR, Certutil, Mshta, etc.)</td><td>10</td><td>SOC163, SOC164, SOC169, SOC170, SOC205, SOC235, SOC239, SOC246, SOC251, SOC287</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>4. Mapeo MITRE ATT&CK (TTPs mas frecuentes)</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>TTP</th><th>Descripcion</th><th>Frecuencia</th></tr>
+</thead>
+<tbody>
+<tr><td>T1190</td><td>Exploit Public-Facing Application</td><td>12</td></tr>
+<tr><td>T1059</td><td>Command and Scripting Interpreter</td><td>14</td></tr>
+<tr><td>T1566</td><td>Phishing</td><td>7</td></tr>
+<tr><td>T1204</td><td>User Execution</td><td>4</td></tr>
+<tr><td>T1110</td><td>Brute Force</td><td>3</td></tr>
+<tr><td>T1218</td><td>Signed Binary Proxy Execution</td><td>4</td></tr>
+<tr><td>T1082</td><td>System Information Discovery</td><td>2</td></tr>
+<tr><td>T1057</td><td>Process Discovery</td><td>2</td></tr>
+<tr><td>T1071</td><td>Application Layer Protocol</td><td>2</td></tr>
+<tr><td>T1105</td><td>Ingress Tool Transfer</td><td>3</td></tr>
+<tr><td>T1046</td><td>Network Service Scanning</td><td>2</td></tr>
+<tr><td>T1595</td><td>Active Scanning</td><td>2</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>5. Casos Destacados</h2>
+
+<h3>5.1 Caso Critico: Windows OLE Zero-Click RCE (SOC336)</h3>
+<ul>
+<li><strong>Severidad:</strong> Critical</li>
+<li><strong>TTPs:</strong> T1566.001, T1203, T1218.010, T1059.003</li>
+<li><strong>Resumen:</strong> Exploit zero-click en Windows OLE que permite ejecucion remota de codigo sin interaccion del usuario.</li>
+<li><strong>Accion:</strong> Triage completo, enriquecimiento de IOC, escalamiento a incidente critico.</li>
+</ul>
+
+<h3>5.2 Caso Critico: Lumma Stealer via Phishing (SOC338)</h3>
+<ul>
+<li><strong>Severidad:</strong> Critical</li>
+<li><strong>TTPs:</strong> T1566, T1218, T1059</li>
+<li><strong>Resumen:</strong> Stealer distribuido mediante campana de phishing con tecnica Click Fix.</li>
+<li><strong>Accion:</strong> Identificacion de DLL side-loading, bloqueo de IOC, documentacion de cadena de ataque.</li>
+</ul>
+
+<h3>5.3 Caso de Falso Positivo: Phishing Interno (SOC120)</h3>
+<ul>
+<li><strong>Severidad:</strong> Medium</li>
+<li><strong>Resultado:</strong> FP</li>
+<li><strong>Resumen:</strong> Alerta de phishing interno a interno que resulto ser comunicacion legitima.</li>
+<li><strong>Accion:</strong> Cierre como falso positivo con justificacion documentada. Demostracion de capacidad de descarte.</li>
+</ul>
+
+<h3>5.4 Caso APT: Zebrocy Malware (SOC331)</h3>
+<ul>
+<li><strong>Severidad:</strong> Medium</li>
+<li><strong>TTPs:</strong> T1566.001, T1204.002, T1057, T1082</li>
+<li><strong>Resumen:</strong> Actividad de malware Zebrocy asociado a APT28.</li>
+<li><strong>Accion:</strong> Enriquecimiento de IOC, mapeo a MITRE, documentacion de cadena de ataque.</li>
+</ul>
+
+<h2>6. Proceso de Triage Aplicado</h2>
+<ol>
+<li><strong>Recepcion de alerta</strong> - revision de campos (source, destination, user, host, process, command line, hash)</li>
+<li><strong>Clasificacion inicial</strong> - revision de severidad reportada por el SIEM (Critical, High, Medium, Low)</li>
+<li><strong>Enriquecimiento de IOC</strong> - consulta a VirusTotal</li>
+<li><strong>Mapeo MITRE ATT&CK</strong> - identificacion de TTPs</li>
+<li><strong>Analisis de contexto</strong> - revision de logs adicionales, correlacion con otras alertas</li>
+<li><strong>Veredicto</strong> - True Positive (TP) o False Positive (FP)</li>
+<li><strong>Documentacion</strong> - registro en bitacora con evidencias, cronologia y acciones</li>
+</ol>
+
+<h2>7. Metricas Operacionales (simuladas)</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Metrica</th><th>Valor</th></tr>
+</thead>
+<tbody>
+<tr><td>Alertas totales triadas</td><td>40</td></tr>
+<tr><td>True Positives</td><td>39 (97.5%)</td></tr>
+<tr><td>False Positives</td><td>1 (2.5%)</td></tr>
+<tr><td>Tasa de deteccion</td><td>97.5%</td></tr>
+<tr><td>Casos criticos escalados</td><td>8</td></tr>
+<tr><td>TTPs unicos mapeados</td><td>18+</td></tr>
+<tr><td>Categorias de amenaza cubiertas</td><td>7</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>8. Fortalezas Demostradas</h2>
+<ul>
+<li><strong>Analisis de alertas complejas:</strong> RCE, phishing, malware, APT, brute force</li>
+<li><strong>Enriquecimiento de IOC:</strong> uso de fuentes CTI (VirusTotal)</li>
+<li><strong>Mapeo MITRE ATT&CK:</strong> identificacion y documentacion de TTPs</li>
+<li><strong>Clasificacion de severidad:</strong> segun severidad reportada por el SIEM (Critical, High, Medium, Low)</li>
+<li><strong>Descarte de falsos positivos:</strong> caso SOC120 documentado con justificacion</li>
+<li><strong>Documentacion estructurada:</strong> bitacora con evidencias, cronologia y veredicto</li>
+</ul>
+
+<h2>9. Brechas Identificadas (para mejora)</h2>
+<ul>
+<li><strong>MTTA/MTTR:</strong> no se registraron tiempos formales de reconocimiento y respuesta por alerta</li>
+<li><strong>SLA:</strong> no se documento cumplimiento de acuerdos de nivel de servicio</li>
+<li><strong>Escalamiento formal:</strong> no se simularon handovers ni escalamientos a MDR/IRM</li>
+<li><strong>Ticketing:</strong> no se uso sistema de ticketing real (Jira, TheHive, etc.)</li>
+<li><strong>Notificaciones al cliente:</strong> no se documentaron comunicaciones formales</li>
+</ul>
+
+<h2>10. Recomendaciones para Proximos Pasos</h2>
+<ol>
+<li><strong>Registrar MTTA y MTTR</strong> por cada alerta para generar metricas operacionales reales</li>
+<li><strong>Simular escalamientos</strong> a MDR/IRM con documentacion de que informacion se entrega</li>
+<li><strong>Practicar handovers</strong> con casos abiertos entre turnos simulados</li>
+<li><strong>Usar un sistema de ticketing</strong> (TheHive, Jira, o incluso GitHub Issues) para documentar casos</li>
+<li><strong>Generar reportes semanales</strong> con metricas: alertas recibidas, casos cerrados, SLA compliance</li>
+</ol>
+
+<h2>11. Evidencia y Referencias</h2>
+<ul>
+<li><strong>Sitio web:</strong> https://cyberlifesa.github.io/alerts.html</li>
+<li><strong>Certificaciones:</strong> CompTIA Security+, Cisco CCST Cybersecurity, HTB CJCA, HTB CDSA, Fortinet Fundamentals</li>
+<li><strong>Laboratorio:</strong> Wazuh, Splunk Enterprise, Sysmon, Active Directory</li>
+<li><strong>Herramientas CTI:</strong> VirusTotal, MITRE ATT&CK</li>
+</ul>
+
+<p style="margin-top:40px;text-align:center;color:#64748b;font-size:14px;">Informe generado para preparacion de puesto SOC L1. Los datos provienen de ejercicios de practica en LetsDefend SIEM Alert Panel.</p>
+
+</div>
+</section>
+
+</body>
+</html>
