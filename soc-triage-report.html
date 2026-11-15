@@ -1,3 +1,4 @@
+successfully downloaded text file (SHA: 3e3db7ebbef5c3ca42e32ca6805821bcf6f84a21)
 successfully downloaded text file (SHA: 95b4ef83207a4d90c4a7d8c43364f4d93079751b)
 <!DOCTYPE html>
 <html lang="es">
@@ -189,13 +190,15 @@ tr:hover td{background:#0b1220}
 <li><strong>Documentacion estructurada:</strong> bitacora con evidencias, cronologia y veredicto</li>
 </ul>
 
-<h2>9. Brechas Identificadas (para mejora)</h2>
+<h2>9. Aspectos Operacionales a Reforzar</h2>
+<p>Los siguientes aspectos son fundamentales en la operacion diaria de un SOC y representan areas de mejora continua para fortalecer la preparacion operativa:</p>
 <ul>
-<li><strong>MTTA/MTTR:</strong> no se registraron tiempos formales de reconocimiento y respuesta por alerta</li>
-<li><strong>SLA:</strong> no se documento cumplimiento de acuerdos de nivel de servicio</li>
-<li><strong>Escalamiento formal:</strong> no se simularon handovers ni escalamientos a MDR/IRM</li>
-<li><strong>Ticketing:</strong> no se uso sistema de ticketing real (Jira, TheHive, etc.)</li>
-<li><strong>Notificaciones al cliente:</strong> no se documentaron comunicaciones formales</li>
+<li><strong>MTTA (Mean Time to Acknowledge):</strong> tiempo medio de reconocimiento de una alerta. En un SOC L1, el objetivo es reconocer y tomar ownership de una alerta en los primeros minutos para asegurar que no quede sin atencion.</li>
+<li><strong>MTTR (Mean Time to Respond/Resolve):</strong> tiempo medio de respuesta o resolucion. Un buen analista L1 busca resolver o escalar dentro de los SLA acordados, documentando cada accion tomada.</li>
+<li><strong>SLA (Service Level Agreement):</strong> acuerdo de nivel de servicio que define los tiempos maximos de respuesta y resolucion por severidad. El cumplimiento de SLA es un indicador clave de desempeno en un SOC.</li>
+<li><strong>Escalamiento formal:</strong> saber cuando y como escalar un incidente a MDR/IRM, incluyendo que informacion entregar (IOC, cronologia, impacto, acciones realizadas) para que el equipo superior pueda continuar la investigacion sin perdida de contexto.</li>
+<li><strong>Ticketing:</strong> registro formal de cada caso en un sistema de ticketing (Jira, TheHive, ServiceNow) con evidencias, cronologia, veredicto y acciones. Un buen ticket permite que otro analista pueda tomar el caso y continuar sin ambiguedades.</li>
+<li><strong>Notificaciones al cliente:</strong> comunicacion formal al cliente cuando se detecta un incidente critico, incluyendo que sucedio, que se hizo, que se necesita del cliente y proximos pasos.</li>
 </ul>
 
 <h2>10. Recomendaciones para Proximos Pasos</h2>
